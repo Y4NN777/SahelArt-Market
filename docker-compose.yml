@@ -8,7 +8,7 @@ services:
     volumes:
       - mongo-data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "rs.status().ok"]
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -18,8 +18,16 @@ services:
   mongo-init:
     image: mongo:7
     depends_on:
-      - mongo
-    entrypoint: ["mongosh", "--host", "mongo:27017", "--eval", "rs.initiate()"]
+      mongo:
+        condition: service_healthy
+    entrypoint:
+      [
+        "mongosh",
+        "--host",
+        "mongo:27017",
+        "--eval",
+        "cfg={_id:'rs0',members:[{_id:0,host:'mongo:27017'}]};try{rs.status()}catch(e){rs.initiate(cfg)};try{c=rs.conf();if(c.members[0].host!='mongo:27017'){c.members[0].host='mongo:27017';rs.reconfig(c,{force:true})}}catch(e){}"
+      ]
     restart: "on-failure"
     networks:
       - sahelart-net
@@ -43,8 +51,8 @@ services:
     volumes:
       - uploads-data:/app/uploads
     depends_on:
-      mongo:
-        condition: service_healthy
+      mongo-init:
+        condition: service_completed_successfully
     networks:
       - sahelart-net
 
