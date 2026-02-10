@@ -54,12 +54,12 @@ Ce document définit les pratiques de collaboration pour l'équipe de développe
 
 **Process de développement** :
 ```
-1. Backend crée l'endpoint selon API.md
-2. Backend teste avec Postman
-3. Backend merge dans main
-4. Frontend consomme l'endpoint
-5. Frontend teste l'intégration
-6. Frontend merge dans main
+1. Backend crée l'endpoint selon docs/API.md
+2. Backend teste avec Postman (ou équivalent)
+3. Backend ouvre une PR vers develop (intégration sur develop)
+4. Frontend consomme l'endpoint depuis develop
+5. Frontend teste l'intégration sur develop
+6. Frontend ouvre une PR vers develop et vérifie les conflits
 ```
 
 ---
@@ -209,34 +209,36 @@ curl http://localhost:3000/api/health
 └─────────────────────────────────────────────────────────────┘
 
 1. Repository Principal
-   └─ main (branche principale protégée)
+   ├─ main (production, protégée)
+   └─ develop (intégration, créée depuis main)
 
 2. Vous créez une issue (optionnel mais recommandé)
    └─ Décrivez le bug ou la feature
 
-3. Vous synchronisez votre branche main locale
-   └─ git checkout main && git pull origin main
+3. Vous synchronisez votre branche develop locale
+   └─ git checkout develop && git pull origin develop
 
-4. Vous créez une branche depuis main
-   └─ git checkout -b feature/nom-de-la-feature
+4. Vous créez une branche depuis develop
+   └─ git checkout -b backend/nom-de-la-feature
+   └─ git checkout -b frontend/nom-de-la-feature
 
 5. Vous développez et committez
    └─ git commit -m "feat: description"
 
 6. Vous pushez sur origin
-   └─ git push origin feature/nom-de-la-feature
+   └─ git push origin backend/nom-de-la-feature
 
 7. Vous créez une Pull Request
-   └─ De origin/feature/... vers origin/main
+   └─ De origin/backend/... vers origin/develop
 
 8. Code Review par l'équipe
    └─ Modifications si demandées
 
-9. Merge dans origin/main
+9. Merge dans origin/develop
    └─ Branche automatiquement supprimée
 
-10. Vous synchronisez votre main local
-    └─ git checkout main && git pull origin main
+10. Release
+    └─ PR de develop vers main après validation
 ```
 
 ### Workflow détaillé étape par étape
@@ -300,16 +302,16 @@ INV-4 : Stock reservation MUST be atomic
 Utiliser une transaction MongoDB pour l'opération de création de commande.
 ```
 
-#### Étape 2 : Synchroniser avec main
+#### Étape 2 : Synchroniser avec develop
 
 **TOUJOURS synchroniser avant de créer une branche** :
 
 ```bash
-# Se placer sur main
-git checkout main
+# Se placer sur develop
+git checkout develop
 
 # Récupérer et fusionner les derniers changements
-git pull origin main
+git pull origin develop
 ```
 
 **Pourquoi ?**
@@ -320,22 +322,21 @@ git pull origin main
 
 ```bash
 # Créer et basculer sur une nouvelle branche
-git checkout -b feature/filter-products-by-category
+git checkout -b backend/filter-products-by-category
 
-# OU pour un bugfix
-git checkout -b fix/negative-stock-bug
+# OU côté frontend
+git checkout -b frontend/filter-products-by-category
 
 # Vérifier que vous êtes sur la bonne branche
 git branch
-# * feature/filter-products-by-category
-#   main
+# * backend/filter-products-by-category
+#   develop
 ```
 
 **Convention de nommage** (voir section dédiée) :
-- `feature/description-courte`
-- `fix/description-bug`
-- `refactor/description`
-- `docs/description`
+- `backend/description-courte`
+- `frontend/description-courte`
+- `hotfix/description`
 
 #### Étape 4 : Développer
 
@@ -406,10 +407,10 @@ Resolves #42"
 
 ```bash
 # Pousser la branche sur origin (le repository principal)
-git push origin feature/filter-products-by-category
+git push origin backend/filter-products-by-category
 
 # Si c'est votre premier push de cette branche (configure le tracking)
-git push -u origin feature/filter-products-by-category
+git push -u origin backend/filter-products-by-category
 ```
 
 **Note** : Ne JAMAIS push directement sur `main` (branche protégée). Toujours passer par une branche et une Pull Request.
@@ -421,8 +422,8 @@ git push -u origin feature/filter-products-by-category
 1. Aller sur le repository : `https://github.com/the-y4nn/SahelArt-Market`
 2. GitHub affichera un bandeau : "Compare & pull request" → cliquer
 3. Vérifier les branches :
-   - **Base branch** : `main`
-   - **Compare branch** : `feature/filter-products-by-category`
+   - **Base branch** : `develop`
+   - **Compare branch** : `backend/filter-products-by-category`
 
 4. Remplir le template de PR :
 
@@ -492,7 +493,7 @@ J'ai ajouté un index sur `categoryId` dans MongoDB pour optimiser les queries.
    # Faire les changements
    git add .
    git commit -m "refactor: use findById for clarity"
-   git push origin feature/filter-products-by-category
+   git push origin backend/filter-products-by-category
 
    # La PR se met à jour automatiquement
    ```
@@ -505,18 +506,18 @@ J'ai ajouté un index sur `categoryId` dans MongoDB pour optimiser les queries.
 
 **Une fois approuvée** :
 
-1. Un mainteneur du projet mergera la PR
+1. Un mainteneur du projet mergera la PR dans `develop`
 2. La branche sera automatiquement supprimée sur GitHub
 3. Vous recevrez une notification
 
 **Après le merge** :
 
 ```bash
-# Retourner sur main
-git checkout main
+# Retourner sur develop
+git checkout develop
 
 # Synchroniser avec origin
-git pull origin main
+git pull origin develop
 
 # Supprimer votre branche locale (la branche remote est déjà supprimée par GitHub)
 git branch -d feature/filter-products-by-category
@@ -867,16 +868,13 @@ git commit -m "feat: add product filter and fix payment bug and update docs"
 
 | Type | Usage | Exemple |
 |------|-------|---------|
-| `feature/` | Nouvelle fonctionnalité | `feature/product-filtering` |
-| `fix/` | Correction de bug | `fix/negative-stock` |
-| `refactor/` | Refactoring | `refactor/payment-service` |
-| `docs/` | Documentation | `docs/api-guide` |
-| `test/` | Ajout de tests | `test/order-service` |
-| `chore/` | Maintenance | `chore/update-dependencies` |
+| `backend/` | Travail backend | `backend/product-filtering` |
+| `frontend/` | Travail frontend | `frontend/product-filtering` |
+| `hotfix/` | Fix urgent prod (depuis main) | `hotfix/payment-timeout` |
 
 ### Règles
 
-1. **Toujours créer depuis `main`** (après sync avec upstream)
+1. **Toujours créer depuis `develop`** (après sync)
 2. **Nom descriptif mais court** (max 40 caractères)
 3. **Kebab-case** (tirets, pas d'underscores)
 4. **Pas de numéros d'issue** dans le nom (mettre dans la PR)
@@ -886,30 +884,29 @@ git commit -m "feat: add product filter and fix payment bug and update docs"
 
 ```bash
 # BON
-git checkout -b feature/category-filter
-git checkout -b fix/stock-validation
-git checkout -b refactor/auth-middleware
-git checkout -b docs/contributing-guide
+git checkout -b backend/category-filter
+git checkout -b frontend/cart-ui
+git checkout -b hotfix/payment-timeout
 
 # MAUVAIS
 git checkout -b new-feature           # Pas de type
-git checkout -b feature_category       # Underscore au lieu de tiret
-git checkout -b fix-issue-42           # Numéro d'issue dans le nom
-git checkout -b feature/add-category-filter-and-price-range  # Trop long, multiple features
+git checkout -b backend_category       # Underscore au lieu de tiret
+git checkout -b fix-issue-42           # Type non autorisé
+git checkout -b backend/add-category-filter-and-price-range  # Trop long, multiple features
 ```
 
 ### Cycle de vie d'une branche
 
 ```
-main
+develop
  │
- ├─ feature/category-filter (créée)
+ ├─ backend/category-filter (créée)
  │   │
  │   ├─ commits...
  │   │
  │   ├─ Push to origin
  │   │
- │   ├─ PR créée
+ │   ├─ PR créée vers develop
  │   │
  │   ├─ Review & modifications
  │   │
@@ -917,12 +914,14 @@ main
  │   │
  │   └─ Branche supprimée (GitHub + local)
  │
-main (mise à jour avec le merge)
+ develop (mise à jour avec le merge)
 ```
 
 ---
 
 ## Process de Pull Request
+
+**Règle** : PRs de `backend/*` et `frontend/*` vont vers `develop`. La release se fait via PR `develop` → `main`.
 
 ### Checklist avant de créer une PR
 
@@ -1089,7 +1088,7 @@ Pour obtenir des feedbacks tôt :
 ```bash
 # Voir la diff complète
 git fetch origin
-git diff main..origin/feature/category-filter
+git diff develop..origin/backend/category-filter
 
 # Ou sur GitHub, onglet "Files changed"
 ```
@@ -1103,7 +1102,7 @@ git diff main..origin/feature/category-filter
 ```bash
 # Checkout la branche de la PR
 git fetch origin
-git checkout origin/feature/category-filter
+git checkout origin/backend/category-filter
 
 # Ou avec GitHub CLI
 gh pr checkout 42
@@ -1205,7 +1204,7 @@ git commit -m "refactor: apply review suggestions
 - Rename 'data' to 'productData'
 - Add comments for error handling"
 
-git push origin feature/category-filter
+git push origin backend/category-filter
 
 # La PR se met à jour automatiquement
 ```
@@ -1487,18 +1486,18 @@ Quand mettre à jour les docs :
 
 ### Conflits Git
 
-#### Scénario : Conflit lors du merge de main
+#### Scénario : Conflit lors du merge de develop
 
 ```bash
-# 1. Sync avec upstream
-git checkout main
-git pull upstream main
+# 1. Sync avec origin
+git checkout develop
+git pull origin develop
 
 # 2. Retourner sur votre branche
-git checkout feature/category-filter
+git checkout backend/category-filter
 
-# 3. Merger main dans votre branche
-git merge main
+# 3. Merger develop dans votre branche
+git merge develop
 
 # Si conflit :
 # Auto-merging backend/src/services/product.service.ts
@@ -1515,9 +1514,9 @@ git merge main
 // Votre code
 const products = await Product.find({ category });
 =======
-// Code de main
+// Code de develop
 const products = await Product.find({ status: 'active' });
->>>>>>> main
+>>>>>>> develop
 
 # 2. Choisir la version ou combiner :
 const products = await Product.find({
@@ -1531,10 +1530,10 @@ const products = await Product.find({
 git add backend/src/services/product.service.ts
 
 # 5. Terminer le merge
-git commit -m "merge: resolve conflict with main"
+git commit -m "merge: resolve conflict with develop"
 
 # 6. Pousser
-git push origin feature/category-filter
+git push origin backend/category-filter
 ```
 
 ### PR rejettée par CI
@@ -1556,43 +1555,43 @@ npm test
 ### Branche désynchronisée
 
 ```bash
-# Votre branche est derrière main de 10 commits
+# Votre branche est derrière develop de 10 commits
 
 # Option 1 : Rebase (recommandé pour historique linéaire)
-git checkout feature/category-filter
+git checkout backend/category-filter
 git fetch origin
-git rebase origin/main
+git rebase origin/develop
 
 # Résoudre les conflits s'il y en a
 git add .
 git rebase --continue
 
 # Force push (ATTENTION : seulement sur votre branche de feature)
-git push --force-with-lease origin feature/category-filter
+git push --force-with-lease origin backend/category-filter
 
 # Option 2 : Merge (plus safe si branche partagée)
-git checkout feature/category-filter
-git pull origin main
-git push origin feature/category-filter
+git checkout backend/category-filter
+git pull origin develop
+git push origin backend/category-filter
 ```
 
 ### Oublié de créer une branche
 
 ```bash
-# Vous avez commité sur main par erreur
+# Vous avez commité sur develop par erreur
 
-# 1. Créer une branche depuis main (garde les commits)
-git checkout -b feature/my-feature
+# 1. Créer une branche depuis develop (garde les commits)
+git checkout -b backend/my-feature
 
-# 2. Reset main pour revenir à origin/main
-git checkout main
-git reset --hard origin/main
+# 2. Reset develop pour revenir à origin/develop
+git checkout develop
+git reset --hard origin/develop
 
 # 3. Retourner sur votre branche
-git checkout feature/my-feature
+git checkout backend/my-feature
 
 # 4. Push
-git push origin feature/my-feature
+git push origin backend/my-feature
 ```
 
 ---
@@ -1603,14 +1602,14 @@ git push origin feature/my-feature
 
 R: Oui, créez une branche séparée pour chaque feature :
 ```bash
-git checkout main
-git pull origin main
-git checkout -b feature/filter-products
+git checkout develop
+git pull origin develop
+git checkout -b backend/filter-products
 # Travailler...
 
-git checkout main
-git pull origin main
-git checkout -b feature/add-reviews
+git checkout develop
+git pull origin develop
+git checkout -b frontend/add-reviews
 # Travailler sur autre chose...
 ```
 
@@ -1646,7 +1645,7 @@ R:
 R:
 1. Créer une issue ou vérifier qu'elle existe
 2. S'assigner l'issue sur GitHub
-3. Créer une branche depuis main
+3. Créer une branche depuis develop
 4. Développer et pousser régulièrement
 5. Créer la PR quand prêt
 
@@ -1654,8 +1653,8 @@ R:
 
 R:
 - Backend implémente l'endpoint en premier
-- Merge dans main après tests
-- Frontend récupère main et consomme l'endpoint
+- PR vers develop après tests
+- Frontend récupère develop et consomme l'endpoint
 - Si besoin de modifier l'API : discussion d'équipe AVANT modification
 
 ---
