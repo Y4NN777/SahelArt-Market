@@ -20,8 +20,8 @@ export const AdminController = {
     });
     const sanitized = result.data.map((user: any) => {
       const obj = user.toObject ? user.toObject() : user;
-      delete obj.passwordHash;
-      return obj;
+      const { passwordHash: _passwordHash, ...rest } = obj;
+      return rest;
     });
     return res.status(200).json({
       success: true,
@@ -33,7 +33,7 @@ export const AdminController = {
   suspendUser: asyncHandler(async (req: Request, res: Response) => {
     const user = await AdminService.suspendUser(req.user!.id, req.params.id, req.body.reason);
     const obj = user.toObject ? user.toObject() : user;
-    delete obj.passwordHash;
-    return sendSuccess(res, { user: obj }, 'User suspended successfully');
+    const { passwordHash: _passwordHash, ...sanitized } = obj;
+    return sendSuccess(res, { user: sanitized }, 'User suspended successfully');
   })
 };

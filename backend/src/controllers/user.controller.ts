@@ -8,7 +8,7 @@ export const UserController = {
     const { profile } = req.body;
     const user = await UserService.updateProfile(req.user!.id, profile || {});
     const obj = user.toObject ? user.toObject() : user;
-    delete obj.passwordHash;
-    return sendSuccess(res, { user: obj }, 'Profile updated successfully');
+    const { passwordHash: _passwordHash, ...sanitized } = obj;
+    return sendSuccess(res, { user: sanitized }, 'Profile updated successfully');
   })
 };
