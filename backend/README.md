@@ -18,7 +18,7 @@ cp .env.example .env
 npm run dev
 ```
 
-API disponible sur `http://localhost:3000/api`.
+API disponible sur `http://localhost:3000/api/v1`.
 
 ## Docker
 Depuis la racine du repo :
@@ -29,11 +29,11 @@ docker compose up --build
 Le `docker-compose.yml` configure MongoDB en replica set pour supporter les transactions.
 
 ## Endpoints rapides
-- `GET /api/health`
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `POST /api/auth/refresh`
-- `POST /api/auth/logout`
+- `GET /api/v1/health`
+- `POST /api/v1/auth/register`
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/refresh`
+- `POST /api/v1/auth/logout`
 
 ## Notes
 - Access token (JWT) dans le body.

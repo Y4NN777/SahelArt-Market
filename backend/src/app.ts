@@ -22,11 +22,13 @@ export const createApp = () => {
   const uploadDir = process.env.UPLOAD_DIR || 'uploads';
   app.use('/uploads', express.static(path.resolve(uploadDir)));
 
-  app.get('/api/health', (_req, res) => {
+  const healthHandler = (_req: express.Request, res: express.Response) => {
     res.json({ status: 'ok' });
-  });
+  };
 
-  app.use('/api', router);
+  app.get('/api/v1/health', healthHandler);
+
+  app.use('/api/v1', router);
 
   app.use(errorHandler);
 

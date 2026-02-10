@@ -4,7 +4,7 @@
 
 **Version** : 1.0.0
 **Date** : 2026-02-06
-**Base URL** : `http://localhost:3000/api` (dev) | `https://api.sahelart.bf/api` (prod)
+**Base URL** : `http://localhost:3000/api/v1/v1/v1` (dev) | `https://api.sahelart.bf/api/v1` (prod)
 
 ---
 
@@ -344,7 +344,7 @@ Créer un nouveau compte utilisateur.
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \
+curl -X POST http://localhost:3000/api/v1/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "vendor@example.com",
@@ -402,7 +402,7 @@ Authentifier un utilisateur existant.
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:3000/api/v1/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "vendor@example.com",
@@ -434,7 +434,7 @@ Récupérer les informations de l'utilisateur connecté.
 
 **Exemple curl** :
 ```bash
-curl -X GET http://localhost:3000/api/auth/me \
+curl -X GET http://localhost:3000/api/v1/v1/auth/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -467,7 +467,7 @@ Renouveler l'access token via refresh token (rotation).
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/auth/refresh \
+curl -X POST http://localhost:3000/api/v1/v1/auth/refresh \
   -H "Content-Type: application/json" \
   -d '{"refreshToken": "YOUR_REFRESH_TOKEN"}'
 ```
@@ -498,7 +498,7 @@ Révoquer le refresh token courant.
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/auth/logout \
+curl -X POST http://localhost:3000/api/v1/v1/auth/logout \
   -H "Content-Type: application/json" \
   -d '{"refreshToken": "YOUR_REFRESH_TOKEN"}'
 ```
@@ -603,19 +603,19 @@ Lister les produits avec filtres et pagination.
 **Exemple curl** :
 ```bash
 # Tous les produits (page 1)
-curl http://localhost:3000/api/products
+curl http://localhost:3000/api/v1/v1/products
 
 # Filtrer par catégorie
-curl "http://localhost:3000/api/products?category=65c1d2e3f4g5h6i7j8"
+curl "http://localhost:3000/api/v1/v1/products?category=65c1d2e3f4g5h6i7j8"
 
 # Filtrer par prix
-curl "http://localhost:3000/api/products?minPrice=1000&maxPrice=10000"
+curl "http://localhost:3000/api/v1/v1/products?minPrice=1000&maxPrice=10000"
 
 # Recherche texte
-curl "http://localhost:3000/api/products?search=poterie"
+curl "http://localhost:3000/api/v1/v1/products?search=poterie"
 
 # Pagination
-curl "http://localhost:3000/api/products?page=2&limit=10"
+curl "http://localhost:3000/api/v1/v1/products?page=2&limit=10"
 ```
 
 ---
@@ -652,7 +652,7 @@ Récupérer les détails d'un produit.
 
 **Exemple curl** :
 ```bash
-curl http://localhost:3000/api/products/65b1c2d3e4f5g6h7i8
+curl http://localhost:3000/api/v1/v1/products/65b1c2d3e4f5g6h7i8
 ```
 
 ---
@@ -717,7 +717,7 @@ Créer un nouveau produit (vendor uniquement).
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/products \
+curl -X POST http://localhost:3000/api/v1/v1/products \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -776,7 +776,7 @@ Mettre à jour un produit existant.
 
 **Exemple curl** :
 ```bash
-curl -X PATCH http://localhost:3000/api/products/65b1c2d3e4f5g6h7i8 \
+curl -X PATCH http://localhost:3000/api/v1/v1/products/65b1c2d3e4f5g6h7i8 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -811,7 +811,7 @@ Supprimer un produit.
 
 **Exemple curl** :
 ```bash
-curl -X DELETE http://localhost:3000/api/products/65b1c2d3e4f5g6h7i8 \
+curl -X DELETE http://localhost:3000/api/v1/v1/products/65b1c2d3e4f5g6h7i8 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -860,7 +860,7 @@ FormData:
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/products/65b1c2d3e4f5g6h7i8/images \
+curl -X POST http://localhost:3000/api/v1/v1/products/65b1c2d3e4f5g6h7i8/images \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -F "images=@/path/to/image1.jpg" \
   -F "images=@/path/to/image2.jpg"
@@ -904,7 +904,7 @@ Lister toutes les catégories.
 
 **Exemple curl** :
 ```bash
-curl http://localhost:3000/api/categories
+curl http://localhost:3000/api/v1/v1/categories
 ```
 
 ---
@@ -1013,7 +1013,7 @@ Créer une nouvelle commande.
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/orders \
+curl -X POST http://localhost:3000/api/v1/v1/orders \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -1071,11 +1071,11 @@ Lister les commandes de l'utilisateur connecté.
 **Exemple curl** :
 ```bash
 # Customer voit ses commandes
-curl http://localhost:3000/api/orders \
+curl http://localhost:3000/api/v1/v1/orders \
   -H "Authorization: Bearer CUSTOMER_TOKEN"
 
 # Filtrer par status
-curl "http://localhost:3000/api/orders?status=Paid" \
+curl "http://localhost:3000/api/v1/v1/orders?status=Paid" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -1121,7 +1121,7 @@ Récupérer les détails d'une commande.
 
 **Exemple curl** :
 ```bash
-curl http://localhost:3000/api/orders/65d1e2f3g4h5i6j7k8 \
+curl http://localhost:3000/api/v1/v1/orders/65d1e2f3g4h5i6j7k8 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -1178,7 +1178,7 @@ Marquer une commande comme expédiée (vendor uniquement).
 
 **Exemple curl** :
 ```bash
-curl -X PATCH http://localhost:3000/api/orders/65d1e2f3g4h5i6j7k8/ship \
+curl -X PATCH http://localhost:3000/api/v1/v1/orders/65d1e2f3g4h5i6j7k8/ship \
   -H "Authorization: Bearer VENDOR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"trackingNumber": "TRACK123456"}'
@@ -1220,7 +1220,7 @@ Confirmer la réception d'une commande (customer uniquement).
 
 **Exemple curl** :
 ```bash
-curl -X PATCH http://localhost:3000/api/orders/65d1e2f3g4h5i6j7k8/delivered \
+curl -X PATCH http://localhost:3000/api/v1/v1/orders/65d1e2f3g4h5i6j7k8/delivered \
   -H "Authorization: Bearer CUSTOMER_TOKEN"
 ```
 
@@ -1265,7 +1265,7 @@ Annuler une commande.
 
 **Exemple curl** :
 ```bash
-curl -X PATCH http://localhost:3000/api/orders/65d1e2f3g4h5i6j7k8/cancel \
+curl -X PATCH http://localhost:3000/api/v1/v1/orders/65d1e2f3g4h5i6j7k8/cancel \
   -H "Authorization: Bearer CUSTOMER_TOKEN"
 ```
 
@@ -1335,7 +1335,7 @@ Initier un paiement pour une commande (MVP : simulé).
 
 **Exemple curl** :
 ```bash
-curl -X POST http://localhost:3000/api/payments \
+curl -X POST http://localhost:3000/api/v1/v1/payments \
   -H "Authorization: Bearer CUSTOMER_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -1419,7 +1419,7 @@ Récupérer les informations de livraison pour une commande.
 
 **Exemple curl** :
 ```bash
-curl http://localhost:3000/api/shipments/65d1e2f3g4h5i6j7k8 \
+curl http://localhost:3000/api/v1/v1/shipments/65d1e2f3g4h5i6j7k8 \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -1474,7 +1474,7 @@ Récupérer les statistiques globales de la plateforme.
 
 **Exemple curl** :
 ```bash
-curl http://localhost:3000/api/admin/stats \
+curl http://localhost:3000/api/v1/v1/admin/stats \
   -H "Authorization: Bearer ADMIN_TOKEN"
 ```
 

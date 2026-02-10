@@ -86,7 +86,7 @@ up:
 	docker compose -f $(COMPOSE_FILE) up -d
 	@echo ""
 	@echo "✅ Backend démarré!"
-	@echo "   Health: http://localhost:3000/api/health"
+	@echo "   Health: http://localhost:3000/api/v1/health"
 	@echo ""
 
 
@@ -116,7 +116,7 @@ ps:
 test:
 	@echo "🏥 Test de l'endpoint health..."
 	@echo -n "Backend:  "
-	@curl -s http://localhost:3000/api/health 2>/dev/null | grep -q "ok" && echo "✅ Healthy" || echo "❌ Down"
+	@curl -s http://localhost:3000/api/v1/health 2>/dev/null | grep -q "ok" && echo "✅ Healthy" || echo "❌ Down"
 	@echo ""
 
 clean:
