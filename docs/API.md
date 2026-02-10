@@ -148,16 +148,17 @@ Authorization: Bearer <JWT_TOKEN>
 }
 ```
 
-**Durée de vie** : 24h (production)
+**Durée de vie** : 15m (access token) par défaut
 
 ### Stockage côté frontend
 
-- **Mobile** : Flutter Secure Storage
-- **Web** : LocalStorage (ou SessionStorage)
+- **Access token** : en mémoire ou Secure Storage selon plateforme.
+- **Refresh token** : cookie HTTP-only pour le web + body pour mobile (Flutter Secure Storage).
 
 ### Refresh
 
-Pour le MVP, pas de refresh token. L'utilisateur doit se reconnecter après expiration.
+- Access token court (ex: 15 minutes) + refresh token long (ex: 7 jours).
+- Rotation systématique à chaque `/auth/refresh`.
 
 ---
 
@@ -329,11 +330,13 @@ Créer un nouveau compte utilisateur.
       "createdAt": "2026-02-06T10:30:00Z",
       "updatedAt": "2026-02-06T10:30:00Z"
     },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "dfe1a7... (token long)"
   },
   "message": "Account created successfully"
 }
 ```
+**Note** : Un cookie HTTP-only `refresh_token` est aussi envoyé.
 
 **Errors** :
 - `400` : Validation échouée
@@ -384,11 +387,13 @@ Authentifier un utilisateur existant.
       "profile": { ... },
       "status": "active"
     },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "dfe1a7... (token long)"
   },
   "message": "Login successful"
 }
 ```
+**Note** : Un cookie HTTP-only `refresh_token` est aussi envoyé.
 
 **Errors** :
 - `400` : Email ou password manquant
@@ -419,15 +424,7 @@ Récupérer les informations de l'utilisateur connecté.
 {
   "success": true,
   "data": {
-    "user": {
-      "_id": "65a1b2c3d4e5f6789",
-      "email": "user@example.com",
-      "role": "customer",
-      "profile": { ... },
-      "status": "active",
-      "createdAt": "2026-02-06T10:30:00Z",
-      "updatedAt": "2026-02-06T10:30:00Z"
-    }
+    "user": { ... }
   }
 }
 ```
@@ -439,6 +436,71 @@ Récupérer les informations de l'utilisateur connecté.
 ```bash
 curl -X GET http://localhost:3000/api/auth/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+---
+
+### POST /auth/refresh
+
+Renouveler l'access token via refresh token (rotation).
+
+**Authentication** : Non
+**Autorisation** : Public
+
+**Source refresh token** :
+- Cookie HTTP-only `refresh_token` (prioritaire)
+- Ou body `refreshToken` (clients mobiles)
+
+**Response 200 OK** :
+```json
+{
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "dfe1a7... (token long)"
+  }
+}
+```
+
+**Errors** :
+- `401` : Refresh token manquant, expiré ou révoqué
+
+**Exemple curl** :
+```bash
+curl -X POST http://localhost:3000/api/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{"refreshToken": "YOUR_REFRESH_TOKEN"}'
+```
+
+---
+
+### POST /auth/logout
+
+Révoquer le refresh token courant.
+
+**Authentication** : Non
+**Autorisation** : Public
+
+**Request Body** (optionnel) :
+```json
+{
+  "refreshToken": "YOUR_REFRESH_TOKEN"
+}
+```
+
+**Response 200 OK** :
+```json
+{
+  "success": true,
+  "message": "Logged out"
+}
+```
+
+**Exemple curl** :
+```bash
+curl -X POST http://localhost:3000/api/auth/logout \
+  -H "Content-Type: application/json" \
+  -d '{"refreshToken": "YOUR_REFRESH_TOKEN"}'
 ```
 
 ---
@@ -1545,7 +1607,7 @@ Suspendre un utilisateur.
 ```
 1. Customer s'authentifie
    POST /auth/login
-   → Reçoit JWT token
+   → Reçoit access token
 
 2. Customer browse les produits
    GET /products?category=poterie
@@ -1578,7 +1640,7 @@ Suspendre un utilisateur.
 ```
 1. Vendor s'authentifie
    POST /auth/login
-   → JWT token
+   → Access token
 
 2. Vendor voit les commandes avec ses produits
    GET /orders
@@ -1604,7 +1666,7 @@ Suspendre un utilisateur.
 ```
 1. Vendor s'authentifie
    POST /auth/login
-   → JWT token
+   → Access token
 
 2. Vendor récupère les catégories
    GET /categories
