@@ -17,7 +17,7 @@ const setRefreshCookie = (res: Response, token: string) => {
     httpOnly: true,
     secure: cookieSecure(),
     sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-    path: '/api/auth/refresh',
+    path: '/api/v1/auth/refresh',
     maxAge: (parseInt(process.env.REFRESH_TOKEN_TTL_DAYS || '7', 10) || 7) * 24 * 60 * 60 * 1000
   });
 };
@@ -27,7 +27,7 @@ const clearRefreshCookie = (res: Response) => {
     httpOnly: true,
     secure: cookieSecure(),
     sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-    path: '/api/auth/refresh'
+    path: '/api/v1/auth/refresh'
   });
 };
 
