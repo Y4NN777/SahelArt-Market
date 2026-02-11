@@ -16,7 +16,6 @@ SahelArt est une plateforme e-commerce dédiée à la digitalisation du commerce
 - [Démarrage rapide](#démarrage-rapide)
 - [Équipe](#équipe)
 - [Contribution](#contribution)
-- [Licence](#licence)
 
 ---
 
@@ -289,7 +288,7 @@ flutter test --coverage
 ### Développement
 
 **Backend** :
-- **the-y4nn** : API REST, MongoDB, Architecture
+- **Yanis** : API REST, MongoDB, Architecture
 
 **Frontend** :
 - **Mourina** : Flutter (Web + Mobile)
@@ -340,17 +339,11 @@ Les contributions sont les bienvenues ! Veuillez lire le [Guide de contribution]
 
 ---
 
-## Licence
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
----
-
 ## Contact
 
-**Repository** : [github.com/the-y4nn/SahelArt-Market](https://github.com/the-y4nn/SahelArt-Market)
+**Repository** : [github.com/the-y4nn/SahelArt-Market](https://github.com/Y4NN777/SahelArt-Market)
 
-**Issues** : [github.com/the-y4nn/SahelArt-Market/issues](https://github.com/the-y4nn/SahelArt-Market/issues)
+**Issues** : [github.com/the-y4nn/SahelArt-Market/issues](https://github.com/Y4NN777/SahelArt-Market/issues)
 
 ---
 
