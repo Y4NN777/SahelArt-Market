@@ -1,0 +1,14 @@
+meta {
+  name: Mark Delivered
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/orders/{{orderId}}/delivered
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}

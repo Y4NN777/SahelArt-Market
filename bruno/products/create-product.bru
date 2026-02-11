@@ -1,0 +1,31 @@
+meta {
+  name: Create Product
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/products
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{vendorToken}}
+}
+
+body:json {
+  {
+    "categoryId": "{{categoryId}}",
+    "name": "Bogolan du Mali",
+    "description": "Tissu traditionnel teint à la boue, fait main par les artisans de Ségou",
+    "price": 35000,
+    "stock": 15
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("productId", res.body.data._id);
+  }
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Update Profile
+  type: http
+  seq: 1
+}
+
+patch {
+  url: {{baseUrl}}/users/me
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+body:json {
+  {
+    "profile": {
+      "firstName": "Fatou",
+      "lastName": "Traoré",
+      "phone": "+22376543210",
+      "address": "Quartier du Fleuve, Bamako"
+    }
+  }
+}

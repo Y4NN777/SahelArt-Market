@@ -1,0 +1,22 @@
+meta {
+  name: Update Product
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/products/{{productId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{vendorToken}}
+}
+
+body:json {
+  {
+    "price": 40000,
+    "description": "Bogolan authentique de Ségou, motifs traditionnels Bambara"
+  }
+}

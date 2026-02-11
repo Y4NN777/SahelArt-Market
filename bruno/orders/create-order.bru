@@ -1,0 +1,39 @@
+meta {
+  name: Create Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/orders
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+body:json {
+  {
+    "items": [
+      {
+        "productId": "{{productId}}",
+        "quantity": 2
+      }
+    ],
+    "shippingAddress": {
+      "street": "Avenue Kwame Nkrumah, Quartier ACI 2000",
+      "city": "Bamako",
+      "postalCode": "BP 1234",
+      "country": "Mali",
+      "phone": "+22370000001"
+    }
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("orderId", res.body.data.order._id);
+  }
+}

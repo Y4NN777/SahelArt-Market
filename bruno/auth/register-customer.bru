@@ -1,0 +1,31 @@
+meta {
+  name: Register Customer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{customerEmail}}",
+    "password": "{{customerPassword}}",
+    "role": "customer",
+    "profile": {
+      "firstName": "Fatou",
+      "lastName": "Traoré",
+      "phone": "+22370000001"
+    }
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("accessToken", res.body.data.accessToken);
+    bru.setVar("refreshToken", res.body.data.refreshToken);
+  }
+}

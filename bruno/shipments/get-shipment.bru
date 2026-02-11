@@ -1,0 +1,14 @@
+meta {
+  name: Get Shipment
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/shipments/{{orderId}}
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}

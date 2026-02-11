@@ -1,0 +1,16 @@
+meta {
+  name: List Categories
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/categories
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.data && res.body.data.length > 0) {
+    bru.setVar("categoryId", res.body.data[0]._id);
+  }
+}

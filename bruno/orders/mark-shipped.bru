@@ -1,0 +1,21 @@
+meta {
+  name: Mark Shipped
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/orders/{{orderId}}/ship
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{vendorToken}}
+}
+
+body:json {
+  {
+    "trackingNumber": "TRK-SAHEL-001"
+  }
+}

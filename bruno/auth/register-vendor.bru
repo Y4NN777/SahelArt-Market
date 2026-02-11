@@ -1,0 +1,31 @@
+meta {
+  name: Register Vendor
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{vendorEmail}}",
+    "password": "{{vendorPassword}}",
+    "role": "vendor",
+    "profile": {
+      "firstName": "Moussa",
+      "lastName": "Keita",
+      "phone": "+22370000002",
+      "address": "Marché Artisanal, Bamako"
+    }
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("vendorToken", res.body.data.accessToken);
+  }
+}

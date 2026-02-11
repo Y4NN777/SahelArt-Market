@@ -1,0 +1,19 @@
+meta {
+  name: List Users
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/admin/users
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminToken}}
+}
+
+params:query {
+  page: 1
+  limit: 20
+}

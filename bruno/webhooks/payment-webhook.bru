@@ -1,0 +1,21 @@
+meta {
+  name: Payment Webhook
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/webhooks/payment
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "transactionId": "TXN-test-001",
+    "orderId": "{{orderId}}",
+    "amount": 70000,
+    "status": "SUCCESS",
+    "signature": "compute-hmac-locally"
+  }
+}
