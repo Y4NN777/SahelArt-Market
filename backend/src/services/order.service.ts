@@ -3,7 +3,9 @@ import { Order } from '../models/Order';
 import { Product } from '../models/Product';
 import { Payment } from '../models/Payment';
 import { Shipment } from '../models/Shipment';
+import { User } from '../models/User';
 import { ApiError } from '../utils/ApiError';
+import { EmailService } from './email.service';
 
 export const OrderService = {
   async create(data: {
@@ -82,6 +84,18 @@ export const OrderService = {
       );
 
       await session.commitTransaction();
+
+      User.findById(data.customerId).then((customer) => {
+        if (customer) {
+          EmailService.sendOrderConfirmation(
+            customer.email,
+            orderDoc[0].id,
+            orderItems.map((i) => ({ name: i.name, quantity: i.quantity, subtotal: i.subtotal })),
+            total
+          ).catch(() => {});
+        }
+      }).catch(() => {});
+
       return { order: orderDoc[0], payment: paymentDoc[0] };
     } catch (error) {
       await session.abortTransaction();
@@ -170,6 +184,12 @@ export const OrderService = {
       await shipment.save();
     }
 
+    User.findById(order.customerId).then((customer) => {
+      if (customer) {
+        EmailService.sendOrderShipped(customer.email, orderId, trackingNumber).catch(() => {});
+      }
+    }).catch(() => {});
+
     return { order, shipment };
   },
 
@@ -194,6 +214,12 @@ export const OrderService = {
       shipment.deliveredAt = new Date();
       await shipment.save();
     }
+
+    User.findById(order.customerId).then((customer) => {
+      if (customer) {
+        EmailService.sendOrderDelivered(customer.email, orderId).catch(() => {});
+      }
+    }).catch(() => {});
 
     return { order, shipment };
   },

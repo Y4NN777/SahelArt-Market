@@ -5,6 +5,7 @@ import { RefreshToken } from '../models/RefreshToken';
 import { ApiError } from '../utils/ApiError';
 import { signAccessToken } from '../config/jwt';
 import { IUser, UserRole } from '../types/auth.types';
+import { EmailService } from './email.service';
 
 const refreshDays = () => parseInt(process.env.REFRESH_TOKEN_TTL_DAYS || '7', 10);
 const refreshPepper = () => process.env.REFRESH_TOKEN_PEPPER || 'pepper';
@@ -62,6 +63,8 @@ export const AuthService = {
 
     const userPayload = buildUserPayload(user);
     const accessToken = signAccessToken(userPayload);
+
+    EmailService.sendWelcome(user.email, data.profile.firstName).catch(() => {});
 
     return { user, accessToken, refreshToken };
   },

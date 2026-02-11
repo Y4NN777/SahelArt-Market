@@ -1,7 +1,9 @@
 import crypto from 'crypto';
 import { Payment } from '../models/Payment';
 import { Order } from '../models/Order';
+import { User } from '../models/User';
 import { ApiError } from '../utils/ApiError';
+import { EmailService } from './email.service';
 
 const generateTxnId = () => `TXN-${crypto.randomBytes(8).toString('hex')}`;
 
@@ -49,6 +51,12 @@ export const PaymentService = {
     order.status = 'Paid';
     await order.save();
 
+    User.findById(data.customerId).then((customer) => {
+      if (customer) {
+        EmailService.sendPaymentReceived(customer.email, order.id, data.amount, data.method).catch(() => {});
+      }
+    }).catch(() => {});
+
     return { payment, order };
   },
 
@@ -95,6 +103,12 @@ export const PaymentService = {
     if (order.status !== 'Paid') {
       order.status = 'Paid';
       await order.save();
+
+      User.findById(order.customerId).then((customer) => {
+        if (customer) {
+          EmailService.sendPaymentReceived(customer.email, order.id, payload.amount, payment.method).catch(() => {});
+        }
+      }).catch(() => {});
     }
 
     return { payment, order };
