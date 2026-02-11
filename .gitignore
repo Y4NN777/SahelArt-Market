@@ -1,0 +1,38 @@
+node_modules/
+dist/
+*.js.map
+backend/tests/**/*.js
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Uploads
+uploads/
+
+# Test coverage
+coverage/
+
+# Flutter
+frontend/.dart_tool/
+frontend/.packages
+frontend/build/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+
+# MongoDB
+mongodb-data/
