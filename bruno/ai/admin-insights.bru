@@ -1,0 +1,34 @@
+meta {
+  name: Admin Insights
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/ai/insights
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminToken}}
+}
+
+docs {
+  # Admin Business Insights (AI)
+
+  Generates executive insights based on platform statistics.
+
+  **Requires**: Admin role
+  **AI Model**: gemini-2.5-flash
+
+  Returns:
+  - `summary`: Executive summary (2-3 sentences)
+  - `insights`: 3-5 key performance insights
+  - `recommendations`: 3-5 strategic recommendations
+
+  Analyzes:
+  - Total orders, revenue, products, vendors
+  - Top categories
+  - Recent trends
+}

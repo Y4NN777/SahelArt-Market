@@ -1,0 +1,30 @@
+meta {
+  name: Get Personalized Recommendations
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/ai/recommendations
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+docs {
+  # Personalized Product Recommendations (AI)
+
+  Generates product recommendations based on customer's order history.
+
+  **Requires**: Customer role
+  **AI Model**: gemini-2.5-flash
+
+  Returns up to 5 personalized product suggestions.
+
+  If no order history exists, returns empty array.
+
+  Uses cache (key: userId + recent products) for 24h.
+}

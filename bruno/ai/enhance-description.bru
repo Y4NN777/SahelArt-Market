@@ -1,0 +1,38 @@
+meta {
+  name: Enhance Product Description
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/ai/enhance-description
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{vendorToken}}
+}
+
+body:json {
+  {
+    "name": "Panier en osier tressé",
+    "categoryName": "Vannerie",
+    "existingDescription": "Un panier fait main par nos artisans"
+  }
+}
+
+docs {
+  # Enhance Product Description (AI)
+
+  Generates rich FR/EN descriptions with Sahel cultural context.
+
+  **Requires**: Vendor or Admin role
+  **AI Model**: gemini-2.5-flash
+
+  Returns:
+  - `fr`: French description (150-200 words)
+  - `en`: English description (150-200 words)
+
+  Uses 24h cache to avoid redundant API calls.
+}

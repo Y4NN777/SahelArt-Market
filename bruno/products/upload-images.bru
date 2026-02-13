@@ -1,0 +1,42 @@
+meta {
+  name: Upload Product Images
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/products/{{productId}}/images
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{vendorToken}}
+}
+
+body:multipart-form {
+  ~images: @file(/path/to/your/image1.jpg)
+  ~images: @file(/path/to/your/image2.jpg)
+}
+
+docs {
+  # Upload Product Images
+
+  Upload up to 5 images for a product.
+
+  **Requires**: Vendor (owner) or Admin role
+
+  **Validation**:
+  - Max 5 images total per product
+  - Accepted formats: JPEG, PNG, WebP
+  - Max file size: 5MB per image
+  - Min dimensions: 400x400 pixels
+  - Filename sanitized (non-alphanumeric chars replaced)
+
+  **Note**: Replace the file paths with actual image paths on your system.
+  The `~` prefix means the field is disabled by default - remove it to enable.
+
+  Images are stored in: `uploads/products/{vendorId}/{productId}/`
+
+  Returns array of image URLs to use in product data.
+}

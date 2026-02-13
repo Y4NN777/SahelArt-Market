@@ -1,0 +1,38 @@
+meta {
+  name: Analyze Product Image
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/ai/analyze-image
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{vendorToken}}
+}
+
+body:json {
+  {
+    "imageBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    "mimeType": "image/png"
+  }
+}
+
+docs {
+  # Analyze Product Image (AI)
+
+  Analyzes a product image and extracts:
+  - Suggested categories
+  - Descriptive tags (materials, colors, techniques)
+  - Brief description
+
+  **Requires**: Vendor or Admin role
+  **AI Model**: gemini-2.5-flash (vision)
+
+  Accepts: image/jpeg, image/png, image/webp
+
+  Note: Replace the base64 string with your actual image data.
+}
