@@ -6,6 +6,7 @@ import { allowRoles } from '../middleware/rbac';
 import { validate } from '../middleware/validation';
 import { createUploadMiddleware } from '../config/upload';
 import { optionalAuth } from '../middleware/optionalAuth';
+import { validateObjectId } from '../middleware/validateObjectId';
 
 const router = Router();
 const upload = createUploadMiddleware();
@@ -29,14 +30,15 @@ const updateSchema = Joi.object({
 });
 
 router.get('/', optionalAuth, ProductController.list);
-router.get('/:id', optionalAuth, ProductController.getById);
+router.get('/:id', optionalAuth, validateObjectId('id'), ProductController.getById);
 router.post('/', requireAuth, allowRoles('vendor', 'admin'), validate(createSchema), ProductController.create);
-router.patch('/:id', requireAuth, allowRoles('vendor', 'admin'), validate(updateSchema), ProductController.update);
-router.delete('/:id', requireAuth, allowRoles('vendor', 'admin'), ProductController.remove);
+router.patch('/:id', requireAuth, allowRoles('vendor', 'admin'), validateObjectId('id'), validate(updateSchema), ProductController.update);
+router.delete('/:id', requireAuth, allowRoles('vendor', 'admin'), validateObjectId('id'), ProductController.remove);
 router.post(
   '/:id/images',
   requireAuth,
   allowRoles('vendor', 'admin'),
+  validateObjectId('id'),
   upload.array('images', 5),
   ProductController.uploadImages
 );

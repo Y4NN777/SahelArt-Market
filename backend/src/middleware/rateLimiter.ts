@@ -11,3 +11,21 @@ export const authRateLimiter = process.env.NODE_ENV === 'test'
       standardHeaders: 'draft-7',
       legacyHeaders: false
     });
+
+export const webhookRateLimiter = process.env.NODE_ENV === 'test'
+  ? passthrough
+  : rateLimit({
+      windowMs: 60 * 1000,
+      limit: 10,
+      standardHeaders: 'draft-7',
+      legacyHeaders: false
+    });
+
+export const apiRateLimiter = process.env.NODE_ENV === 'test'
+  ? passthrough
+  : rateLimit({
+      windowMs: 15 * 60 * 1000,
+      limit: 100,
+      standardHeaders: 'draft-7',
+      legacyHeaders: false
+    });

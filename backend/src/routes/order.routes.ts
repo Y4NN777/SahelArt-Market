@@ -4,6 +4,7 @@ import { OrderController } from '../controllers/order.controller';
 import { requireAuth } from '../middleware/auth';
 import { allowRoles } from '../middleware/rbac';
 import { validate } from '../middleware/validation';
+import { validateObjectId } from '../middleware/validateObjectId';
 
 const router = Router();
 
@@ -32,9 +33,9 @@ const shipSchema = Joi.object({
 
 router.post('/', requireAuth, allowRoles('customer'), validate(createSchema), OrderController.create);
 router.get('/', requireAuth, allowRoles('customer', 'vendor', 'admin'), OrderController.list);
-router.get('/:id', requireAuth, allowRoles('customer', 'vendor', 'admin'), OrderController.getById);
-router.patch('/:id/ship', requireAuth, allowRoles('vendor', 'admin'), validate(shipSchema), OrderController.ship);
-router.patch('/:id/delivered', requireAuth, allowRoles('customer', 'admin'), OrderController.delivered);
-router.patch('/:id/cancel', requireAuth, allowRoles('customer', 'admin'), OrderController.cancel);
+router.get('/:id', requireAuth, allowRoles('customer', 'vendor', 'admin'), validateObjectId('id'), OrderController.getById);
+router.patch('/:id/ship', requireAuth, allowRoles('vendor', 'admin'), validateObjectId('id'), validate(shipSchema), OrderController.ship);
+router.patch('/:id/delivered', requireAuth, allowRoles('customer', 'admin'), validateObjectId('id'), OrderController.delivered);
+router.patch('/:id/cancel', requireAuth, allowRoles('customer', 'admin'), validateObjectId('id'), OrderController.cancel);
 
 export default router;

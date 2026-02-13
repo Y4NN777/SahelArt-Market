@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Joi from 'joi';
 import { PaymentController } from '../controllers/payment.controller';
 import { validate } from '../middleware/validation';
+import { webhookRateLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -13,6 +14,6 @@ const webhookSchema = Joi.object({
   signature: Joi.string().optional()
 });
 
-router.post('/payment', validate(webhookSchema), PaymentController.webhook);
+router.post('/payment', webhookRateLimiter, validate(webhookSchema), PaymentController.webhook);
 
 export default router;
