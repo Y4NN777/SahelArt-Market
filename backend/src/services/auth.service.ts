@@ -6,6 +6,7 @@ import { ApiError } from '../utils/ApiError';
 import { signAccessToken } from '../config/jwt';
 import { IUser, UserRole } from '../types/auth.types';
 import { EmailService } from './email.service';
+import { RealtimeService } from './realtime.service';
 
 const refreshDays = () => parseInt(process.env.REFRESH_TOKEN_TTL_DAYS || '7', 10);
 const refreshPepper = () => process.env.REFRESH_TOKEN_PEPPER || 'pepper';
@@ -65,6 +66,13 @@ export const AuthService = {
     const accessToken = signAccessToken(userPayload);
 
     EmailService.sendWelcome(user.email, data.profile.firstName).catch(() => {});
+
+    RealtimeService.emitToAdmin('admin:new_user', {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      name: `${data.profile.firstName} ${data.profile.lastName}`
+    });
 
     return { user, accessToken, refreshToken };
   },

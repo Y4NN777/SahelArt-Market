@@ -4,6 +4,7 @@ import { Order } from '../models/Order';
 import { User } from '../models/User';
 import { ApiError } from '../utils/ApiError';
 import { EmailService } from './email.service';
+import { RealtimeService } from './realtime.service';
 
 const generateTxnId = () => `TXN-${crypto.randomBytes(8).toString('hex')}`;
 
@@ -57,6 +58,16 @@ export const PaymentService = {
       }
     }).catch(() => {});
 
+    RealtimeService.emitToUser(data.customerId, 'payment:completed', {
+      orderId: order.id,
+      amount: data.amount
+    });
+
+    const vendorIds = [...new Set(order.items.map((item: any) => item.vendorId.toString()))];
+    for (const vendorId of vendorIds) {
+      RealtimeService.emitToVendor(vendorId, 'order:paid', { orderId: order.id });
+    }
+
     return { payment, order };
   },
 
@@ -109,6 +120,16 @@ export const PaymentService = {
           EmailService.sendPaymentReceived(customer.email, order.id, payload.amount, payment.method).catch(() => {});
         }
       }).catch(() => {});
+
+      RealtimeService.emitToUser(order.customerId.toString(), 'payment:completed', {
+        orderId: order.id,
+        amount: payload.amount
+      });
+
+      const vendorIds = [...new Set(order.items.map((item: any) => item.vendorId.toString()))];
+      for (const vendorId of vendorIds) {
+        RealtimeService.emitToVendor(vendorId, 'order:paid', { orderId: order.id });
+      }
     }
 
     return { payment, order };

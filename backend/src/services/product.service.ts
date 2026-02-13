@@ -2,6 +2,7 @@ import { Product } from '../models/Product';
 import { Category } from '../models/Category';
 import { Order } from '../models/Order';
 import { ApiError } from '../utils/ApiError';
+import { RealtimeService } from './realtime.service';
 
 export const ProductService = {
   async create(data: {
@@ -29,6 +30,13 @@ export const ProductService = {
       stock: data.stock,
       images: data.images || []
     });
+
+    RealtimeService.emitPublic('product:created', {
+      productId: product.id,
+      name: product.name,
+      price: product.price
+    });
+
     return product;
   },
 
@@ -121,6 +129,17 @@ export const ProductService = {
       }
     }
     const updated = await Product.findByIdAndUpdate(id, data, { new: true });
+
+    if (updated) {
+      RealtimeService.emitPublic('product:updated', {
+        productId: updated.id,
+        name: updated.name,
+        price: updated.price,
+        stock: updated.stock,
+        status: updated.status
+      });
+    }
+
     return updated;
   },
 

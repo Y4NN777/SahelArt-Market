@@ -6,6 +6,7 @@ import { Shipment } from '../models/Shipment';
 import { User } from '../models/User';
 import { ApiError } from '../utils/ApiError';
 import { EmailService } from './email.service';
+import { RealtimeService } from './realtime.service';
 
 export const OrderService = {
   async create(data: {
@@ -95,6 +96,26 @@ export const OrderService = {
           ).catch(() => {});
         }
       }).catch(() => {});
+
+      RealtimeService.emitToUser(data.customerId, 'order:created', { orderId: orderDoc[0].id });
+      RealtimeService.emitToAdmin('order:created', { orderId: orderDoc[0].id, customerId: data.customerId });
+
+      const vendorIds = [...new Set(orderItems.map((item) => item.vendorId.toString()))];
+      for (const vendorId of vendorIds) {
+        RealtimeService.emitToVendor(vendorId, 'order:created', { orderId: orderDoc[0].id });
+
+        const vendorItems = orderItems.filter((item) => item.vendorId.toString() === vendorId);
+        for (const item of vendorItems) {
+          const product = await Product.findById(item.productId);
+          if (product && product.stock < 5) {
+            RealtimeService.emitToVendor(vendorId, 'product:low_stock', {
+              productId: product.id,
+              productName: product.name,
+              stock: product.stock
+            });
+          }
+        }
+      }
 
       return { order: orderDoc[0], payment: paymentDoc[0] };
     } catch (error) {
@@ -190,6 +211,11 @@ export const OrderService = {
       }
     }).catch(() => {});
 
+    RealtimeService.emitToUser(order.customerId.toString(), 'order:shipped', {
+      orderId: order.id,
+      trackingNumber
+    });
+
     return { order, shipment };
   },
 
@@ -221,6 +247,8 @@ export const OrderService = {
       }
     }).catch(() => {});
 
+    RealtimeService.emitToUser(order.customerId.toString(), 'order:delivered', { orderId: order.id });
+
     return { order, shipment };
   },
 
@@ -251,6 +279,14 @@ export const OrderService = {
       await order.save({ session });
 
       await session.commitTransaction();
+
+      RealtimeService.emitToUser(order.customerId.toString(), 'order:cancelled', { orderId: order.id });
+
+      const vendorIds = [...new Set(order.items.map((item) => item.vendorId.toString()))];
+      for (const vendorId of vendorIds) {
+        RealtimeService.emitToVendor(vendorId, 'order:cancelled', { orderId: order.id });
+      }
+
       return order;
     } catch (error) {
       await session.abortTransaction();
