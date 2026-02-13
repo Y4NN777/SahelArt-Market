@@ -37,6 +37,7 @@ services:
       context: ./backend
     container_name: sahelart-api
     environment:
+      - NODE_ENV=development
       - PORT=3000
       - MONGO_URI=mongodb://mongo:27017/sahelart
       - JWT_SECRET=change_me
@@ -46,6 +47,9 @@ services:
       - COOKIE_SECURE=false
       - UPLOAD_DIR=/app/uploads
       - PAYMENT_WEBHOOK_SECRET=change_me_webhook
+      - ALLOWED_ORIGINS=http://localhost:5173
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - AI_AUTO_ENHANCE=false
     ports:
       - "3000:3000"
     volumes:
