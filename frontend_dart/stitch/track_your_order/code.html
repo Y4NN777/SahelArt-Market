@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Track Your Order - SahelArt</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#ec7813",
+              "background-light": "#f8f7f6",
+              "background-dark": "#221810",
+              "neutral-warm": {
+                  50: '#fdfbf9',
+                  100: '#fcf6f1',
+                  200: '#f6e9de',
+                  300: '#edd5c3',
+                  400: '#dfb799',
+                  500: '#d1946b',
+                  600: '#c2764b',
+                  700: '#a15d3b',
+                  800: '#844d34',
+                  900: '#6b412f',
+              }
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-neutral-warm-900 dark:text-neutral-warm-50 h-screen overflow-hidden flex flex-col items-center justify-center">
+<!-- Mobile Device Container -->
+<div class="w-full max-w-md h-full bg-white dark:bg-[#2a1e16] shadow-2xl overflow-y-auto relative flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-20 bg-white/90 dark:bg-[#2a1e16]/90 backdrop-blur-md px-4 py-4 flex items-center border-b border-neutral-warm-200 dark:border-neutral-warm-800">
+<button class="p-2 -ml-2 rounded-full hover:bg-neutral-warm-100 dark:hover:bg-neutral-warm-800 transition-colors">
+<span class="material-icons-round text-2xl text-neutral-warm-800 dark:text-white">chevron_left</span>
+</button>
+<h1 class="flex-1 text-center font-bold text-lg text-neutral-warm-900 dark:text-white">Track Your Order</h1>
+<button class="p-2 -mr-2 rounded-full hover:bg-neutral-warm-100 dark:hover:bg-neutral-warm-800 transition-colors">
+<span class="material-icons-round text-2xl text-neutral-warm-800 dark:text-white">more_horiz</span>
+</button>
+</header>
+<!-- Main Content Scrollable -->
+<main class="flex-1 p-5 space-y-6 pb-24">
+<!-- Order Summary Card -->
+<div class="bg-white dark:bg-[#34261d] rounded-xl shadow-sm border border-neutral-warm-200 dark:border-neutral-warm-800 p-4 flex gap-4 items-center">
+<div class="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-neutral-warm-100">
+<img alt="Hand-woven basket thumbnail" class="w-full h-full object-cover" data-alt="Close up of a woven basket texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa9Xc2NzCv0y5BXzaqAz2WeVSw8yg7ZSQ4N0fZs0cWa9A--LGWIc1PNk1VTCSddgJIhSDkv5j2vIyJBEcH_2-mGM6JfIC7bmvDrgRmWEs2Jktzlc86_XirIsl_gV2RT6tzLQaioa8qzEEr3Hs7QmabIvr3DtzoDfyS_x3vgGegsa1yPcbF74fbLtE3kBz6FrasKctA70a-QByZquRRMgMt5J8sMaJJiKDrpgVkrdAFZQZCYHUtTUOzImoZqRAEYcg5HsJ5uHO9-mTq"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-xs text-neutral-warm-500 dark:text-neutral-warm-400 font-medium">Order #SA-4920</p>
+<h2 class="text-sm font-bold text-neutral-warm-900 dark:text-white truncate mt-0.5">Hand-woven Tuareg Basket</h2>
+</div>
+</div>
+<div class="mt-2 flex items-center gap-1.5">
+<span class="material-icons-round text-sm text-primary">schedule</span>
+<p class="text-xs font-semibold text-primary">Est. Delivery: Oct 24 - Oct 26</p>
+</div>
+</div>
+</div>
+<!-- Map Section -->
+<div class="relative w-full h-48 rounded-xl overflow-hidden shadow-sm border border-neutral-warm-200 dark:border-neutral-warm-800">
+<img alt="Map showing shipment location" class="w-full h-full object-cover opacity-80" data-alt="Map view showing route in Africa" data-location="Niamey, Niger" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpYPLa-PA39d-ftOmBcJ-6cCskRdKXSvstzO7222ChqB6VJ7xxrprFsl0qjbS9yRF6VX03SMP2UIPyjs8ei65HcJQCb2Jq_sngZe4gNmlZLP9xnj2TOOUWGre_m1B6d0G_hOAD_drW4CtrX6zR6N6HkJkAZBmLMVoLAc4iEb4sW7MxcBDuoJfFDptrirdrqfT6rSM25kN_CKvIHdRQC54KkqY06ZqS5-HmTZMy6J1uuwzLzR6SG6q8UaJlwCWRAsjTYLqqQGpeYzc1"/>
+<!-- Map Overlay Gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+<!-- Live Location Badge -->
+<div class="absolute top-3 right-3 bg-white dark:bg-[#34261d] px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5 z-10">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-[10px] font-bold uppercase tracking-wide text-neutral-warm-900 dark:text-white">Live</span>
+</div>
+<!-- Map Pin -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-primary text-white p-1.5 rounded-full shadow-lg">
+<span class="material-icons-round text-base block">local_shipping</span>
+</div>
+<div class="bg-white dark:bg-[#34261d] px-2 py-0.5 rounded-md shadow-sm mt-1">
+<span class="text-[10px] font-bold text-neutral-warm-800 dark:text-neutral-warm-100">Niamey</span>
+</div>
+</div>
+<div class="absolute bottom-3 left-3 text-white text-xs font-medium drop-shadow-md">
+                    Last update: 15 mins ago
+                </div>
+</div>
+<!-- Timeline Tracker -->
+<div class="bg-white dark:bg-[#34261d] rounded-xl p-5 shadow-sm border border-neutral-warm-200 dark:border-neutral-warm-800">
+<h3 class="text-base font-bold text-neutral-warm-900 dark:text-white mb-6">Shipment Status</h3>
+<!-- Step 1: Completed -->
+<div class="relative pl-8 pb-8 border-l-2 border-primary">
+<div class="absolute -left-[9px] top-0 bg-primary h-4 w-4 rounded-full flex items-center justify-center ring-4 ring-white dark:ring-[#34261d]">
+<span class="material-icons-round text-[10px] text-white">check</span>
+</div>
+<div class="flex justify-between items-start -mt-1">
+<div>
+<h4 class="text-sm font-semibold text-neutral-warm-900 dark:text-white">Order Placed</h4>
+<p class="text-xs text-neutral-warm-500 dark:text-neutral-warm-400 mt-1">We have received your order.</p>
+</div>
+<span class="text-[10px] text-neutral-warm-400 font-medium">Oct 18</span>
+</div>
+</div>
+<!-- Step 2: Current / Active -->
+<div class="relative pl-8 pb-8 border-l-2 border-dashed border-primary/30">
+<!-- Pulsing Active Dot -->
+<div class="absolute -left-[9px] top-0">
+<span class="absolute inline-flex h-4 w-4 rounded-full bg-primary opacity-20 animate-ping"></span>
+<div class="bg-primary h-4 w-4 rounded-full flex items-center justify-center ring-4 ring-white dark:ring-[#34261d] relative z-10">
+<div class="bg-white h-1.5 w-1.5 rounded-full"></div>
+</div>
+</div>
+<div class="bg-neutral-warm-50 dark:bg-white/5 rounded-lg p-3 -mt-2 border border-primary/20">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-bold text-primary">Artisan Preparing</h4>
+<span class="text-[10px] text-primary font-bold bg-primary/10 px-1.5 py-0.5 rounded">Current</span>
+</div>
+<p class="text-xs text-neutral-warm-600 dark:text-neutral-warm-300 mt-1 leading-relaxed">
+                            Your hand-woven basket is being finalized by <span class="font-medium text-neutral-warm-900 dark:text-white">Amadou</span> in Niamey.
+                        </p>
+</div>
+</div>
+<!-- Step 3: Pending -->
+<div class="relative pl-8 pb-8 border-l-2 border-dashed border-neutral-warm-200 dark:border-neutral-warm-700">
+<div class="absolute -left-[9px] top-0 bg-neutral-warm-200 dark:bg-neutral-warm-700 h-4 w-4 rounded-full ring-4 ring-white dark:ring-[#34261d]"></div>
+<div class="flex justify-between items-start -mt-1 opacity-60">
+<div>
+<h4 class="text-sm font-medium text-neutral-warm-900 dark:text-white">In Transit</h4>
+<p class="text-xs text-neutral-warm-500 dark:text-neutral-warm-400 mt-1">On the way to logistics center.</p>
+</div>
+</div>
+</div>
+<!-- Step 4: Pending -->
+<div class="relative pl-8">
+<div class="absolute -left-[9px] top-0 bg-neutral-warm-200 dark:bg-neutral-warm-700 h-4 w-4 rounded-full ring-4 ring-white dark:ring-[#34261d]"></div>
+<div class="flex justify-between items-start -mt-1 opacity-60">
+<div>
+<h4 class="text-sm font-medium text-neutral-warm-900 dark:text-white">Delivered</h4>
+<p class="text-xs text-neutral-warm-500 dark:text-neutral-warm-400 mt-1">Package arrived at your door.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Courier / Artisan Info -->
+<div class="bg-neutral-warm-50 dark:bg-white/5 rounded-xl p-4 flex items-center gap-3 border border-neutral-warm-100 dark:border-neutral-warm-800">
+<div class="w-10 h-10 rounded-full bg-neutral-warm-200 dark:bg-neutral-warm-700 overflow-hidden">
+<img alt="Artisan Profile" class="w-full h-full object-cover" data-alt="Portrait of African artisan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABWCzJfUWrmgAQ3-_JSV3qgirlvmvBw4Jb9KRMxZmlAcfww0JLWU2goQ8LzKp9oxat985OoyGRjfN0XJzGgpf0504vG7XE-qYaVPcyQ0tkGmQCG3X9qG7oO07Ft314hs6kvKUVRQC6QpkjoBLj-goeuSgJiiQPSkh8RSsxamxVfdE4X2iZsR3MnWE1fqGjWO60mA52TaWsTI_0EZqAWfQtfo-t0DS6QSCtNd-fqESSMPi2hx2KBPFyOgOMrgYmETlopmZ1v7yDo5Jn"/>
+</div>
+<div class="flex-1">
+<p class="text-xs text-neutral-warm-500 dark:text-neutral-warm-400">Artisan</p>
+<h4 class="text-sm font-bold text-neutral-warm-900 dark:text-white">Amadou Diallo</h4>
+</div>
+<button class="w-8 h-8 rounded-full bg-white dark:bg-[#2a1e16] border border-neutral-warm-200 dark:border-neutral-warm-700 flex items-center justify-center text-primary shadow-sm">
+<span class="material-icons-round text-lg">chat_bubble_outline</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-white dark:bg-[#2a1e16] border border-neutral-warm-200 dark:border-neutral-warm-700 flex items-center justify-center text-primary shadow-sm">
+<span class="material-icons-round text-lg">call</span>
+</button>
+</div>
+</main>
+<!-- Fixed Bottom Actions -->
+<div class="absolute bottom-0 left-0 w-full bg-white dark:bg-[#2a1e16] border-t border-neutral-warm-200 dark:border-neutral-warm-800 p-4 pb-8 space-y-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3.5 rounded-lg shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
+<span class="material-icons-round text-xl">support_agent</span>
+<span>Contact Support</span>
+</button>
+<button class="w-full bg-transparent hover:bg-neutral-warm-50 dark:hover:bg-white/5 text-neutral-warm-600 dark:text-neutral-warm-300 font-medium py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
+<span>Problem with order?</span>
+</button>
+</div>
+</div>
+</body></html>

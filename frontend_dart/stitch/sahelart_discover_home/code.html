@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SahelArt Discover Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7813",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221810",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-100 antialiased selection:bg-primary/30">
+<div class="max-w-md mx-auto min-h-screen relative flex flex-col bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<!-- Header Section with Search -->
+<header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md px-5 pt-12 pb-4 border-b border-primary/10">
+<div class="flex justify-between items-center mb-5">
+<div>
+<h1 class="text-2xl font-bold text-primary tracking-tight flex items-center gap-2">
+<span class="material-icons-outlined">wb_sunny</span> SahelArt
+                    </h1>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium">Authentic treasures from the Sahel</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="relative p-2 rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-icons-outlined text-gray-700 dark:text-gray-200">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-background-dark"></span>
+</button>
+<button class="relative p-2 rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-icons-outlined text-gray-700 dark:text-gray-200">shopping_bag</span>
+</button>
+</div>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 material-icons-outlined">search</span>
+<input class="w-full pl-11 pr-4 py-3 bg-white dark:bg-gray-800 border-none ring-1 ring-gray-200 dark:ring-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 shadow-sm text-sm placeholder-gray-400 dark:placeholder-gray-500 transition-all" placeholder="Search pottery, masks, textiles..." type="text"/>
+</div>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-24">
+<!-- Categories Filters -->
+<section class="py-6 pl-5">
+<div class="flex gap-3 overflow-x-auto no-scrollbar pr-5">
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full text-sm font-semibold shadow-lg shadow-primary/20 shrink-0">
+<span class="material-icons-outlined text-base">grid_view</span> All
+                    </button>
+<button class="px-5 py-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium hover:border-primary/30 hover:text-primary transition-colors shrink-0 whitespace-nowrap">
+                        Pottery
+                    </button>
+<button class="px-5 py-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium hover:border-primary/30 hover:text-primary transition-colors shrink-0 whitespace-nowrap">
+                        Textiles
+                    </button>
+<button class="px-5 py-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium hover:border-primary/30 hover:text-primary transition-colors shrink-0 whitespace-nowrap">
+                        Jewelry
+                    </button>
+<button class="px-5 py-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium hover:border-primary/30 hover:text-primary transition-colors shrink-0 whitespace-nowrap">
+                        Woodwork
+                    </button>
+</div>
+</section>
+<!-- Featured Artisans -->
+<section class="mb-8">
+<div class="flex justify-between items-end px-5 mb-4">
+<h2 class="text-lg font-bold text-gray-900 dark:text-white">Featured Artisans</h2>
+<a class="text-xs font-semibold text-primary hover:text-primary/80 transition-colors" href="#">See All</a>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar px-5 pb-2">
+<!-- Artisan 1 -->
+<div class="flex flex-col items-center gap-2 shrink-0 w-[72px]">
+<div class="relative w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-primary to-orange-300">
+<img alt="Portrait of smiling artisan woman" class="w-full h-full object-cover rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of smiling artisan woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9rRbI1EVmhh-eeYiKKQKNGVbxNIdjfDRKC0ye6Kvnu0YnMyDOWFWMjByy5sI-eP7NeDzvtZRe6m_4QCXpzLUvByUXmax4GGZL81CT5IAXah9m9beSQu2DiGjQf4wcYR7uIal4AIADxWfhiQ5100HDXdsfXoAQZydEMIX_4v5dS32R07RuKzEM2BoZPIuyEzhU8xPqcWJzSFwP0AFi60-d2gzdyx8xBGT4Pss700UWQSs5fHbeiFImPAhdlATchQAgrjJtvBcJWC_2"/>
+</div>
+<span class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate w-full text-center">Amadou K.</span>
+</div>
+<!-- Artisan 2 -->
+<div class="flex flex-col items-center gap-2 shrink-0 w-[72px]">
+<div class="relative w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-primary to-orange-300">
+<img alt="Portrait of artisan man wearing hat" class="w-full h-full object-cover rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of artisan man wearing hat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsocr7zlwnoNh7A08sl7OhZ5ZcFf1fUzfJC6NwMzEcwQSIX-cq8DEQop0BOCS6zo8haWtDN2F7V4F0b12OmkFbKevvABNqpUd2tNXPigwjsQVDMw-h5gEm6WJpUuxO2SXwb_Om9khBoTovlpb2a6qF_u_Pi4a7C8WBdaA-pj1SjW0edAkmXVzd5GIwxfgDFOBDX5lWdRQUDtZ6tocj-p0n7J_SgRRiRarRpZs15_NvlIB3ulWMm3H-NRLWfGFJxDcYCHS2ZNqWTzJq"/>
+</div>
+<span class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate w-full text-center">Fatou D.</span>
+</div>
+<!-- Artisan 3 -->
+<div class="flex flex-col items-center gap-2 shrink-0 w-[72px]">
+<div class="relative w-16 h-16 rounded-full p-0.5 bg-gray-200 dark:bg-gray-700">
+<img alt="Portrait of artisan woman with headwrap" class="w-full h-full object-cover rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of artisan woman with headwrap" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4pHyxA90tKlnNKN_XgEJKFq1GZyeitdBl1TBRmI7dkr77JkCSUEZ9hZCP-2suwjByVf-FEWm_-g8P__kWsPNeNA68nNDuxgcp6T1PMS16CUFhJTb7Gn-Ph_bmRxXz0Bh0AN2E-FzuX0kj9yG3r7PONl6-Vw7mlHcEPQFj2r2GNDZqedaZV3Yu1BmNTHODdLg9AMalZIzO7v7R89idO4c1iab3l_oP1bwCdfbq44v4CjoEoF2XVGUEjGs9L1ultWuyMgC-By7Kf4lf"/>
+</div>
+<span class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate w-full text-center">Kofi M.</span>
+</div>
+<!-- Artisan 4 -->
+<div class="flex flex-col items-center gap-2 shrink-0 w-[72px]">
+<div class="relative w-16 h-16 rounded-full p-0.5 bg-gray-200 dark:bg-gray-700">
+<img alt="Portrait of cheerful artisan man" class="w-full h-full object-cover rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of cheerful artisan man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIySzn2Q_kHHImajEOhqCI-LuXkYhXi6-v0Ft7NbETEv5kOX58tGgSMWXV02Wv7H_CBDlt8PKxRjVfVPLnRp_7ua6kp_mfHxtoXXGAfRT0F77WUnHO9hWty7sFBLSRwv_O92zhLcSCJfWbJyHYrQFQ8xPU4elr2Cx44WBHJXsEmPnCYeK5zpd3svhM_QHd8pbjWcEWimCmTmkeqbxSeVfgD7yXXQyolNGhsF9hO2hCHW44S1JwD4He4xRHQt4q-5dmZnmK8CEDNkSw"/>
+</div>
+<span class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate w-full text-center">Amina S.</span>
+</div>
+<!-- Artisan 5 -->
+<div class="flex flex-col items-center gap-2 shrink-0 w-[72px]">
+<div class="relative w-16 h-16 rounded-full p-0.5 bg-gray-200 dark:bg-gray-700">
+<img alt="Portrait of artisan woman in bright clothes" class="w-full h-full object-cover rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of artisan woman in bright clothes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBNYvJe2-ifN5ybrHJ81DHvqcPaoa1axNLzqsl57JE1uK3ylhiAZnXMDnCatEE2_r4ETIgTpjasOCdFUSX42rb8g6Gfe-qumICNx4jksxnwJX6LehfJhBNRc4axqWHBLRopFWbwNYq_9UXLeEsQkqPDQH0IXO8rnonGjVAQBH_8cUKPypbXUHnoVl_71ad5kcNW7v8AuBUpt2p9vfZ9oLVkZXMsKaqwqj5yBC_elU2e3cwEJl1QRnDEIDilJ8rzdRjUGmPo3ThY_mq"/>
+</div>
+<span class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate w-full text-center">Yousef A.</span>
+</div>
+</div>
+</section>
+<!-- Trending Products Grid -->
+<section class="px-5">
+<div class="flex justify-between items-end mb-4">
+<h2 class="text-lg font-bold text-gray-900 dark:text-white">Trending Products</h2>
+<button class="text-gray-400 hover:text-primary transition-colors material-icons-outlined">tune</button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Product Card 1 -->
+<article class="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
+<img alt="Earthy ceramic vase on table" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Earthy ceramic vase on table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGcgTjobOYszWmmTuD_f8Q-IYukuxk42Ywz_V6MaVFkgn5qdWKhfr_pr5X1jYOheeFif0hBxsAWReGvXmn03KWd_8_9-oY7bqXVqOV35_TY7aKEumyMkQrR2kZ6Z7RkWt-Mv20rrcAgR6nNaLhxn_R_74a6eWc2WpTK29LwkwuqKGYqxOepFaSp4pGa8WicD6Mv8pAMpF4sBviUqFOe2qlGkoyJpTEe96Kquz6JoAJUmveddVhqFZRqf6c7JLYwXJpRNN1DUulgXWN"/>
+<button class="absolute top-2 right-2 p-1.5 bg-white/80 dark:bg-black/40 backdrop-blur-sm rounded-full text-gray-600 dark:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-icons-outlined text-sm">favorite_border</span>
+</button>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-0.5">Terracotta Vase</h3>
+<p class="text-[10px] text-gray-500 dark:text-gray-400">By Amadou K.</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<span class="text-sm font-bold text-primary">12,500 CFA</span>
+<button class="w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:bg-primary/90 transition-colors">
+<span class="material-icons-outlined text-xs">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
+<img alt="Patterned woven mud cloth textile" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Patterned woven mud cloth textile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7wtXKBkb_byQuFxYZj3jllTTrLv0NDCWLMu5kJcxWz_FQEpmf67cTRA3CLelK0VU-tYDTFGYql6EuE3aFLWoDSGfr73sESPiNmbnnPIZWDnSdx_13dCnJ7eNO5cWfTH25D5VtM1pnHJy5FJUsRwL2nPaXLOAw87u0hElWK0r9eqSuV1ZPmmhzx0_dOHYr_ViJGd4Q0jJShxITw3LEODs1tGQRei0K85bR1Q9DSkHmECsGqzsPGRHDhDMVmQq57Fv9lIicAwHFIrAo"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[10px] font-medium text-white">Best Seller</div>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-0.5">Bogolan Cloth</h3>
+<p class="text-[10px] text-gray-500 dark:text-gray-400">By Coop Timbuktu</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<span class="text-sm font-bold text-primary">25,000 CFA</span>
+<button class="w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:bg-primary/90 transition-colors">
+<span class="material-icons-outlined text-xs">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
+<img alt="Handcrafted silver ring jewelry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Handcrafted silver ring jewelry" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtEYbUoYhdsmAmndNlbvrSqP_6I92zqn_2rUUFsqN9bzjFC4eMBl6Z8AeOInL_D6rvJcu2UObHsVAAB7NdzoiJa58ha-bDJJQDjHsJ-7cpKs8dWo_DmI5FqbdYD7Gym__5bjzdCGX0T7qjmZox3RLKTdzFwTaZUUP7L3upi7oRlisjNOFXfTaVC6XA_TfBXdF8fv-mymBHXjxe_W9pF_kxgLWIGLM318MU0CHXyEhQPucI_NUdna0jgAztGY-krlVVQlBX-dYeLhDF"/>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-0.5">Tuareg Silver Ring</h3>
+<p class="text-[10px] text-gray-500 dark:text-gray-400">By Agadez Silver</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<span class="text-sm font-bold text-primary">35,000 CFA</span>
+<button class="w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:bg-primary/90 transition-colors">
+<span class="material-icons-outlined text-xs">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 4 -->
+<article class="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
+<img alt="Woven colorful basket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Woven colorful basket" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9HBBBDg0bcMIqbktX8et62cW5zaCVlwJ9px1CY9WvAxrk1KCQn_hwKY6VnK4Vz4-b6ECifC_1P6e8rKYCmTT7pa6Jsa_p9dUm8Nkx5bxkVN2xla4QG06uuGvMs_q_TQPJ7vjEHAzT2HNO7cjrU3VeIxpk_tHow51MXCkUk9TvPY65YoU3ntIrX9ilHIRT3jan3HYyiFJPyWxjEiYTXfPQMNJ-hjTKXlPjhG9OZxA26FCxbP23dUmg1b7Aoz5uUUvKQZZBno1ygHNR"/>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-0.5">Nubian Basket</h3>
+<p class="text-[10px] text-gray-500 dark:text-gray-400">By Fatou D.</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<span class="text-sm font-bold text-primary">8,500 CFA</span>
+<button class="w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:bg-primary/90 transition-colors">
+<span class="material-icons-outlined text-xs">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 5 -->
+<article class="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
+<img alt="Abstract modern art painting" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Abstract modern art painting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg3s29gFhHn4pqjphtJgWLYpxkx3IYyuNP2h-IzvvwwSbVS0l_w22XLb0152RL-G00v2t06fGqxoVJ3a3lo0fitx4IPtb-57olcYCWc1JWEhDkyKjPrgDS5bOZs60Bo9IXEIiuez47CWp1UYVMSpMUd8qaxfRUz2T4O9bUP71HIJpXCU4aXE1sCkf8eXocL4o52cotLfz7-JczglbRPG0OzpAPGlOHvI0TieFFHO5vL3e7kWCBJUx4Qav_4_TzoTRZvA6WRVqS6hdG"/>
+<button class="absolute top-2 right-2 p-1.5 bg-white/80 dark:bg-black/40 backdrop-blur-sm rounded-full text-gray-600 dark:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-icons-outlined text-sm">favorite_border</span>
+</button>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-0.5">Sahel Canvas</h3>
+<p class="text-[10px] text-gray-500 dark:text-gray-400">By Contemporary BF</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<span class="text-sm font-bold text-primary">45,000 CFA</span>
+<button class="w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:bg-primary/90 transition-colors">
+<span class="material-icons-outlined text-xs">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 6 -->
+<article class="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
+<img alt="Carved wooden artisan stool" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Carved wooden artisan stool" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmosTuoK3-tNjv_XT79GXD-f_vswPd53PHQEwkj3H2hI83lecq4-kSWG94E5hoAzPAE9fCNnLAltnXXooDCHcQO-7FO0mURZbEfIFhX-O-4rjWtOODYbJk9gsXwBIYigOl-QjHtbBNkW4L3lvpmINUxastc9egVYJx9vKcbvVWA7TFGX-qxUwhoDLJztZbgdp8Sm3JHQxkuikpMUofRdMGXC5lSotLJ6JVuK60V-vvzeXBjSkT-Iokungag_6FhmzNi3WZODAXHO0g"/>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-0.5">Baobab Stool</h3>
+<p class="text-[10px] text-gray-500 dark:text-gray-400">By Woodworks BF</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<span class="text-sm font-bold text-primary">18,000 CFA</span>
+<button class="w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full shadow-sm hover:bg-primary/90 transition-colors">
+<span class="material-icons-outlined text-xs">add</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<!-- Spacer for bottom nav -->
+<div class="h-24"></div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="absolute bottom-0 w-full bg-white dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 px-6 py-3 pb-6 z-50">
+<ul class="flex justify-between items-center">
+<li>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-icons-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-outlined">category</span>
+<span class="text-[10px] font-medium">Browse</span>
+</a>
+</li>
+<li>
+<a class="relative -top-6 bg-primary text-white rounded-full p-4 shadow-lg shadow-primary/30 hover:scale-105 transition-transform" href="#">
+<span class="material-icons-outlined text-2xl">camera_alt</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-outlined">favorite_border</span>
+<span class="text-[10px] font-medium">Saved</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-outlined">person_outline</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</body></html>
