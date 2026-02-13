@@ -38,4 +38,7 @@ const orderSchema = new Schema(
   { timestamps: true }
 );
 
+orderSchema.index({ status: 1, createdAt: -1 });
+orderSchema.index({ 'items.vendorId': 1 });
+
 export const Order = mongoose.model('Order', orderSchema);

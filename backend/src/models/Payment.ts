@@ -13,4 +13,7 @@ const paymentSchema = new Schema(
   { timestamps: true }
 );
 
+paymentSchema.index({ customerId: 1 });
+paymentSchema.index({ status: 1 });
+
 export const Payment = mongoose.model('Payment', paymentSchema);

@@ -11,4 +11,8 @@ const logSchema = new Schema(
   { timestamps: true }
 );
 
+logSchema.index({ actorId: 1 });
+logSchema.index({ targetType: 1, targetId: 1 });
+logSchema.index({ createdAt: -1 });
+
 export const Log = mongoose.model('Log', logSchema);
