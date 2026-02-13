@@ -9,6 +9,7 @@ beforeAll(async () => {
   process.env.JWT_EXPIRES_IN = '15m';
   process.env.REFRESH_TOKEN_PEPPER = 'test-pepper';
   process.env.PAYMENT_WEBHOOK_SECRET = 'test-webhook-secret';
+  process.env.ALLOWED_ORIGINS = 'http://localhost:3000';
 
   replSet = await MongoMemoryReplSet.create({
     replSet: { count: 1, storageEngine: 'wiredTiger' }
@@ -16,7 +17,12 @@ beforeAll(async () => {
 
   const uri = replSet.getUri();
   await mongoose.connect(uri);
-});
+
+  // Ensure all indexes are created before tests run
+  await Promise.all(
+    Object.values(mongoose.connection.models).map((model) => model.ensureIndexes())
+  );
+}, 60000);
 
 afterEach(async () => {
   const collections = mongoose.connection.collections;
