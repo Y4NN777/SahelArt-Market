@@ -8,6 +8,27 @@ export const sendSuccess = (res: Response, data: unknown, message?: string, stat
   });
 };
 
+export const sendPaginatedSuccess = (
+  res: Response,
+  data: unknown,
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  },
+  message?: string
+) => {
+  return res.status(200).json({
+    success: true,
+    data,
+    pagination,
+    ...(message ? { message } : {})
+  });
+};
+
 export const sendError = (res: Response, status: number, code: string, message: string, details?: unknown) => {
   return res.status(status).json({
     success: false,

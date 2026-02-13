@@ -3,7 +3,7 @@ import path from 'path';
 import sharp from 'sharp';
 import { ProductService } from '../services/product.service';
 import { asyncHandler } from '../utils/asyncHandler';
-import { sendSuccess } from '../utils/ApiResponse';
+import { sendSuccess, sendPaginatedSuccess } from '../utils/ApiResponse';
 import { parsePagination } from '../utils/validators';
 import { ApiError } from '../utils/ApiError';
 
@@ -34,11 +34,7 @@ export const ProductController = {
       requesterRole: req.user?.role,
       requesterId: req.user?.id
     });
-    return res.status(200).json({
-      success: true,
-      data: result.data,
-      pagination: result.pagination
-    });
+    return sendPaginatedSuccess(res, result.data, result.pagination);
   }),
 
   getById: asyncHandler(async (req: Request, res: Response) => {

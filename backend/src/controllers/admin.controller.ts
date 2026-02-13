@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AdminService } from '../services/admin.service';
 import { asyncHandler } from '../utils/asyncHandler';
-import { sendSuccess } from '../utils/ApiResponse';
+import { sendSuccess, sendPaginatedSuccess } from '../utils/ApiResponse';
 import { parsePagination } from '../utils/validators';
 
 export const AdminController = {
@@ -18,22 +18,11 @@ export const AdminController = {
       page,
       limit
     });
-    const sanitized = result.data.map((user: any) => {
-      const obj = user.toObject ? user.toObject() : user;
-      const { passwordHash: _passwordHash, ...rest } = obj;
-      return rest;
-    });
-    return res.status(200).json({
-      success: true,
-      data: sanitized,
-      pagination: result.pagination
-    });
+    return sendPaginatedSuccess(res, result.data, result.pagination);
   }),
 
   suspendUser: asyncHandler(async (req: Request, res: Response) => {
     const user = await AdminService.suspendUser(req.user!.id, req.params.id, req.body.reason);
-    const obj = user.toObject ? user.toObject() : user;
-    const { passwordHash: _passwordHash, ...sanitized } = obj;
-    return sendSuccess(res, { user: sanitized }, 'User suspended successfully');
+    return sendSuccess(res, { user }, 'User suspended successfully');
   })
 };

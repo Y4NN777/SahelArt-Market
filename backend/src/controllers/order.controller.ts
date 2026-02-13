@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { OrderService } from '../services/order.service';
 import { asyncHandler } from '../utils/asyncHandler';
-import { sendSuccess } from '../utils/ApiResponse';
+import { sendSuccess, sendPaginatedSuccess } from '../utils/ApiResponse';
 import { parsePagination } from '../utils/validators';
 
 export const OrderController = {
@@ -23,11 +23,7 @@ export const OrderController = {
       page,
       limit
     });
-    return res.status(200).json({
-      success: true,
-      data: result.data,
-      pagination: result.pagination
-    });
+    return sendPaginatedSuccess(res, result.data, result.pagination);
   }),
 
   getById: asyncHandler(async (req: Request, res: Response) => {

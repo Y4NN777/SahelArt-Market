@@ -7,8 +7,6 @@ export const UserController = {
   updateMe: asyncHandler(async (req: Request, res: Response) => {
     const { profile } = req.body;
     const user = await UserService.updateProfile(req.user!.id, profile || {});
-    const obj = user.toObject ? user.toObject() : user;
-    const { passwordHash: _passwordHash, ...sanitized } = obj;
-    return sendSuccess(res, { user: sanitized }, 'Profile updated successfully');
+    return sendSuccess(res, { user }, 'Profile updated successfully');
   })
 };

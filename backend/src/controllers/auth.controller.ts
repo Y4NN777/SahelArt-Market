@@ -6,12 +6,6 @@ import { sendError, sendSuccess } from '../utils/ApiResponse';
 
 const cookieSecure = () => (process.env.COOKIE_SECURE || 'false') === 'true';
 
-const sanitizeUser = (user: any) => {
-  const obj = user.toObject ? user.toObject() : { ...user };
-  delete obj.passwordHash;
-  return obj;
-};
-
 const setRefreshCookie = (res: Response, token: string) => {
   res.cookie('refresh_token', token, {
     httpOnly: true,
@@ -39,7 +33,7 @@ export const AuthController = {
     return sendSuccess(
       res,
       {
-        user: sanitizeUser(result.user),
+        user: result.user,
         accessToken: result.accessToken,
         refreshToken: result.refreshToken
       },
@@ -55,7 +49,7 @@ export const AuthController = {
     return sendSuccess(
       res,
       {
-        user: sanitizeUser(result.user),
+        user: result.user,
         accessToken: result.accessToken,
         refreshToken: result.refreshToken
       },
@@ -65,7 +59,7 @@ export const AuthController = {
 
   me: asyncHandler(async (req: Request, res: Response) => {
     const user = await UserService.getById(req.user!.id);
-    return sendSuccess(res, { user: sanitizeUser(user) });
+    return sendSuccess(res, { user });
   }),
 
   refresh: asyncHandler(async (req: Request, res: Response) => {
