@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import '../core/network/api_client.dart';
 import '../core/theme/app_theme.dart';
 import '../features/auth/presentation/login_page.dart';
-import '../features/auth/presentation/register_page.dart';
+import '../features/auth/presentation/pages/role_selection_page.dart';
+import '../features/auth/presentation/pages/customer_register_page.dart';
+import '../features/auth/presentation/pages/vendor_register_page.dart';
+import '../features/auth/presentation/splash_page.dart';
 import '../features/cart/domain/cart_item.dart';
 import '../features/products/domain/product.dart';
 import '../features/products/presentation/home_page.dart';
 import '../data/services/storage_service.dart';
 
-enum AuthView { login, register }
+enum AuthView { login, roleSelection, customerRegister, vendorRegister }
 
 class SahelArtApp extends StatefulWidget {
   const SahelArtApp({super.key});
@@ -25,6 +28,7 @@ class _SahelArtAppState extends State<SahelArtApp> {
 
   String? _token;
   bool _booting = true;
+  bool _introDone = false;
   bool _authLoading = false;
   bool _rememberMe = false;
   String? _authError;
@@ -33,6 +37,7 @@ class _SahelArtAppState extends State<SahelArtApp> {
   @override
   void initState() {
     super.initState();
+    _startIntro();
     _bootstrapAuth();
   }
 
@@ -49,16 +54,24 @@ class _SahelArtAppState extends State<SahelArtApp> {
   }
 
   Widget _buildHome() {
-    if (_booting) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+    if (!_introDone || _booting) {
+      return SplashPage(
+        loadingLabel: _booting ? 'Préparation de votre espace...' : 'Bienvenue',
       );
     }
 
     if (_token == null) {
-      if (_authView == AuthView.register) {
-        return RegisterPage(
-          loading: _authLoading,
+      // Role selection screen
+      if (_authView == AuthView.roleSelection) {
+        return RoleSelectionPage(
+          onRoleSelected: (role) {
+            setState(() {
+              _authView = role == 'customer'
+                  ? AuthView.customerRegister
+                  : AuthView.vendorRegister;
+              _authError = null;
+            });
+          },
           onBackToLogin: () {
             setState(() {
               _authView = AuthView.login;
@@ -68,6 +81,66 @@ class _SahelArtAppState extends State<SahelArtApp> {
         );
       }
 
+      // Customer register screen
+      if (_authView == AuthView.customerRegister) {
+        return CustomerRegisterPage(
+          loading: _authLoading,
+          error: _authError,
+          onRegister: ({
+            required String firstName,
+            required String lastName,
+            required String email,
+            required String password,
+          }) async {
+            // TODO: Implement customer registration
+            setState(() => _authLoading = true);
+            await Future.delayed(const Duration(seconds: 2));
+            setState(() {
+              _authLoading = false;
+              _authError = 'Inscription customer pas encore implémentée';
+            });
+          },
+          onBack: () {
+            setState(() {
+              _authView = AuthView.roleSelection;
+              _authError = null;
+            });
+          },
+        );
+      }
+
+      // Vendor register screen
+      if (_authView == AuthView.vendorRegister) {
+        return VendorRegisterPage(
+          loading: _authLoading,
+          error: _authError,
+          onRegister: ({
+            required String firstName,
+            required String lastName,
+            required String email,
+            required String password,
+            required String businessName,
+            required String businessDescription,
+            required String phone,
+          }) async {
+            // TODO: Implement vendor registration
+            setState(() => _authLoading = true);
+            await Future.delayed(const Duration(seconds: 2));
+            setState(() {
+              _authLoading = false;
+              _authError = 'Inscription vendor pas encore implémentée';
+            });
+          },
+          onBack: () {
+            setState(() {
+              _authView = AuthView.roleSelection;
+              _authError = null;
+            });
+          },
+        );
+      }
+
+      // Login screen (default)
       return LoginPage(
         loading: _authLoading,
         error: _authError,
@@ -75,7 +148,7 @@ class _SahelArtAppState extends State<SahelArtApp> {
         rememberMeInitial: _rememberMe,
         onGoToRegister: () {
           setState(() {
-            _authView = AuthView.register;
+            _authView = AuthView.roleSelection;
             _authError = null;
           });
         },
@@ -91,6 +164,14 @@ class _SahelArtAppState extends State<SahelArtApp> {
       onUpdateQuantity: _handleUpdateQuantity,
       onCheckout: _handleCheckout,
     );
+  }
+
+  Future<void> _startIntro() async {
+    await Future<void>.delayed(const Duration(milliseconds: 2100));
+    if (!mounted) return;
+    setState(() {
+      _introDone = true;
+    });
   }
 
   Future<void> _bootstrapAuth() async {
