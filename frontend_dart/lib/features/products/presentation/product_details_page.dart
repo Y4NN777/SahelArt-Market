@@ -13,6 +13,30 @@ class ProductDetailsPage extends StatelessWidget {
   final Product product;
   final VoidCallback onAddToCart;
 
+  Widget _buildProductImage(String imageUrl) {
+    final isAsset = imageUrl.startsWith('assets/');
+
+    if (isAsset) {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => Container(
+          color: const Color(0xFFF2F2F2),
+          child: const Icon(Icons.broken_image, size: 80, color: Color(0xFFBDBDBD)),
+        ),
+      );
+    }
+
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Container(
+        color: const Color(0xFFF2F2F2),
+        child: const Icon(Icons.broken_image, size: 80, color: Color(0xFFBDBDBD)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,10 +66,12 @@ class ProductDetailsPage extends StatelessWidget {
                   )
                 ],
                 flexibleSpace: FlexibleSpaceBar(
-                  background: Image.network(
-                    'https://lh3.googleusercontent.com/aida-public/AB6AXuD5i93IoC_AqPFK--DoBWLHox9f5Mz85EIe-KY4QAiIHjpxqKsVjlZJuaFi8ecXLpYWFr8ULEDnt8GHbjBATTuA6aeoO17eLL-6CFlkc-hhZkifLuZQdJBlM7N3CKkxmLV2aCWIdWSpNTJmM-qim8T9Nkm25sjbsQ3U0Po1792RjUTcUsApeJmmatWELOUgsOBa0NV1JQOhEpEqIZYLICS0LurIKO-U5rvf3-1LHK5RVcp1PeShDmi0L9DTxwl9KqG5K2iEUWhtE8rK',
-                    fit: BoxFit.cover,
-                  ),
+                  background: product.imageUrl != null
+                      ? _buildProductImage(product.imageUrl!)
+                      : Container(
+                          color: const Color(0xFFF2F2F2),
+                          child: const Icon(Icons.image_outlined, size: 80, color: Color(0xFFBDBDBD)),
+                        ),
                 ),
               ),
               SliverToBoxAdapter(
@@ -56,13 +82,19 @@ class ProductDetailsPage extends StatelessWidget {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          _Badge(text: 'Only 2 left'),
+                        children: [
+                          _Badge(text: 'Only ${product.stock} left'),
                           Row(
                             children: [
-                              Icon(Icons.star, size: 18, color: Color(0xFFF59E0B)),
-                              SizedBox(width: 4),
-                              Text('4.9 (128)', style: TextStyle(fontWeight: FontWeight.w700)),
+                              const Icon(Icons.star, size: 18, color: Color(0xFFF59E0B)),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${product.rating} (${product.reviewsCount})',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -70,7 +102,11 @@ class ProductDetailsPage extends StatelessWidget {
                       const SizedBox(height: 12),
                       Text(
                         product.name,
-                        style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -97,29 +133,61 @@ class ProductDetailsPage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Crafted by', style: TextStyle(fontSize: 12, color: AppColors.primary)),
-                                  Text('Fatoumata Diallo', style: TextStyle(fontWeight: FontWeight.w800)),
-                                  Text('Segou, Mali', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                                  const Text(
+                                    'Crafted by',
+                                    style: TextStyle(fontSize: 12, color: AppColors.primary),
+                                  ),
+                                  Text(
+                                    product.artisan?.name ?? 'Fatoumata Diallo',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  Text(
+                                    product.artisan?.location ?? 'Segou, Mali',
+                                    style: const TextStyle(
+                                      color: Color(0xFF6B7280),
+                                      fontSize: 12,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            const Icon(Icons.chevron_right_rounded),
+                            const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
                           ],
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Text('The Story', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                      const SizedBox(height: 8),
                       const Text(
-                        'This authentic Bogolanfini is hand-dyed using fermented mud and plant leaves, a tradition passed down through generations.',
-                        style: TextStyle(color: Color(0xFF4B5563), height: 1.4),
+                        'The Story',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        product.description ?? 'This authentic Bogolanfini is hand-dyed using fermented mud and plant leaves, a tradition passed down through generations.',
+                        style: const TextStyle(
+                          color: Color(0xFF4B5563),
+                          height: 1.4,
+                        ),
                       ),
                       const SizedBox(height: 18),
-                      const Text('Specifications', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                      const Text(
+                        'Specifications',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
                       const SizedBox(height: 10),
                       GridView.count(
                         crossAxisCount: 2,
@@ -150,18 +218,38 @@ class ProductDetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Total Price', style: TextStyle(fontSize: 12, color: Color(0xFF6B7280))),
-                          Text('CFA 45k', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 22)),
+                          const Text(
+                            'Total Price',
+                            style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                          ),
+                          Text(
+                            'CFA ${(product.price / 1000).toStringAsFixed(0)}k',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 22,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     FilledButton.icon(
-                      onPressed: onAddToCart,
+                      onPressed: () {
+                        onAddToCart();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product.name} ajouté au panier'),
+                            backgroundColor: AppColors.primary,
+                            duration: const Duration(seconds: 2),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
@@ -221,7 +309,14 @@ class _Spec extends StatelessWidget {
         children: [
           Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280))),
           const SizedBox(height: 2),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+          Text(
+            value,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+              color: AppColors.textPrimary,
+            ),
+          ),
         ],
       ),
     );

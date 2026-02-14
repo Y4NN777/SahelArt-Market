@@ -12,12 +12,19 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundLight,
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
+        onPrimary: Colors.white,
         surface: AppColors.backgroundLight,
+        onSurface: AppColors.textPrimary,
+        background: Colors.white,
+        onBackground: AppColors.textPrimary,
       ),
     );
 
     return base.copyWith(
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme),
+      textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme).apply(
+        bodyColor: AppColors.textPrimary,
+        displayColor: AppColors.textPrimary,
+      ),
       cardTheme: const CardThemeData(
         color: Colors.white,
         elevation: 0,
@@ -51,9 +58,16 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
+        onPrimary: Colors.white, // TEXTE BLANC sur boutons orange
         surface: AppColors.backgroundDark,
+        onSurface: Colors.white, // TEXTE BLANC sur fond sombre
+        background: AppColors.backgroundDark,
+        onBackground: Colors.white, // TEXTE BLANC sur fond sombre
       ),
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(ThemeData.dark().textTheme),
+      textTheme: GoogleFonts.plusJakartaSansTextTheme(ThemeData.dark().textTheme).apply(
+        bodyColor: Colors.white, // Texte body BLANC en mode sombre
+        displayColor: Colors.white, // Texte titres BLANC en mode sombre
+      ),
     );
   }
 }

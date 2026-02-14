@@ -17,6 +17,7 @@ class LoginPage extends StatefulWidget {
     required this.apiBaseUrl,
     required this.onGoToRegister,
     this.rememberMeInitial = false,
+    this.onSkip,
   });
 
   final bool loading;
@@ -24,6 +25,7 @@ class LoginPage extends StatefulWidget {
   final String apiBaseUrl;
   final bool rememberMeInitial;
   final VoidCallback onGoToRegister;
+  final VoidCallback? onSkip;
   final Future<void> Function(String email, String password, bool rememberMe) onLogin;
 
   @override
@@ -74,6 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: LoginFormContent(
                   onSubmit: widget.onLogin,
                   onGoToRegister: widget.onGoToRegister,
+                  onSkip: widget.onSkip,
                   loading: widget.loading,
                   error: widget.error,
                   apiBaseUrl: widget.apiBaseUrl,
@@ -146,6 +149,7 @@ class _LoginPageState extends State<LoginPage> {
       child: LoginFormContent(
         onSubmit: widget.onLogin,
         onGoToRegister: widget.onGoToRegister,
+        onSkip: widget.onSkip,
         loading: widget.loading,
         error: widget.error,
         apiBaseUrl: widget.apiBaseUrl,

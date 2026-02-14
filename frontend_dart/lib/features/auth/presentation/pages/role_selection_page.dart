@@ -9,10 +9,12 @@ class RoleSelectionPage extends StatelessWidget {
     super.key,
     required this.onRoleSelected,
     required this.onBackToLogin,
+    this.onSkip,
   });
 
   final Function(String role) onRoleSelected;
   final VoidCallback onBackToLogin;
+  final VoidCallback? onSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +115,28 @@ class RoleSelectionPage extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                // Guest mode option
+                if (onSkip != null) ...[
+                  const SizedBox(height: AuthStyles.spacing16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AuthStyles.spacing24),
+                    child: TextButton(
+                      onPressed: onSkip,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: AuthStyles.spacing12),
+                      ),
+                      child: const Text(
+                        'Continuer sans compte',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

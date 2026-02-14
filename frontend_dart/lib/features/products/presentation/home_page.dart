@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/colors.dart';
-import '../../../presentation/widgets/common/app_button.dart';
 import '../../../presentation/widgets/common/error_widget.dart';
 import '../../../presentation/widgets/common/loading_indicator.dart';
-import '../../../presentation/widgets/layouts/bottom_nav_widget.dart';
 import '../../../presentation/widgets/product/product_card.dart';
 import '../../cart/domain/cart_item.dart';
-import '../../orders/presentation/track_order_page.dart';
 import '../domain/product.dart';
 import '../../../core/network/api_client.dart';
 import 'product_details_page.dart';
-import '../../vendor/presentation/vendor_dashboard_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -39,10 +35,18 @@ class _HomePageState extends State<HomePage> {
   bool _loading = true;
   String? _error;
   List<Product> _products = [];
-  bool _checkoutLoading = false;
 
   static const _categories = ['All', 'Pottery', 'Textiles', 'Jewelry', 'Woodwork'];
   int _activeCategory = 0;
+
+  /// Get filtered products based on active category
+  List<Product> get _filteredProducts {
+    if (_activeCategory == 0) {
+      return _products; // "All" category
+    }
+    final categoryName = _categories[_activeCategory];
+    return _products.where((p) => p.category == categoryName).toList();
+  }
 
   @override
   void initState() {
@@ -71,43 +75,27 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  double get _cartTotal => widget.cart.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
-  int get _cartQty => widget.cart.fold(0, (sum, item) => sum + item.quantity);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                _buildHeader(),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: _loadProducts,
-                    child: ListView(
-                      padding: const EdgeInsets.only(bottom: 220),
-                      children: [
-                        _buildCategories(),
-                        _buildArtisans(),
-                        const SizedBox(height: 12),
-                        _buildProductsSection(),
-                      ],
-                    ),
-                  ),
+            _buildHeader(),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _loadProducts,
+                child: ListView(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  children: [
+                    _buildCategories(),
+                    _buildArtisans(),
+                    const SizedBox(height: 12),
+                    _buildProductsSection(),
+                  ],
                 ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildCheckoutBar(),
-                  const BottomNavWidget(),
-                ],
               ),
             ),
           ],
@@ -127,7 +115,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Row(
             children: [
-              const Icon(Icons.wb_sunny_outlined, color: AppColors.primary),
+              const Icon(Icons.wb_sunny_outlined, color: AppColors.primary, size: 28),
               const SizedBox(width: 8),
               const Text(
                 'SahelArt',
@@ -135,41 +123,38 @@ class _HomePageState extends State<HomePage> {
               ),
               const Spacer(),
               IconButton(
-                onPressed: _loadProducts,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Notifications - Coming soon!')),
+                  );
+                },
                 icon: const Icon(Icons.notifications_none_rounded),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const TrackOrderPage()),
-                  );
-                },
-                icon: const Icon(Icons.local_shipping_outlined),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const VendorDashboardPage()),
-                  );
-                },
-                icon: const Icon(Icons.storefront_outlined),
-              ),
-              IconButton(
-                onPressed: () async => widget.onLogout(),
-                icon: const Icon(Icons.logout_rounded),
               ),
             ],
           ),
           const SizedBox(height: 10),
           TextField(
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 15,
+            ),
             decoration: InputDecoration(
               hintText: 'Search pottery, masks, textiles...',
-              prefixIcon: const Icon(Icons.search_rounded),
+              hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
+              prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF9CA3AF)),
               filled: true,
               fillColor: Colors.white,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.primary, width: 2),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
+                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
               ),
             ),
           ),
@@ -191,6 +176,7 @@ class _HomePageState extends State<HomePage> {
             label: Text(_categories[index]),
             onSelected: (_) => setState(() => _activeCategory = index),
             selectedColor: AppColors.primary,
+            showCheckmark: false,
             labelStyle: TextStyle(
               color: active ? Colors.white : const Color(0xFF4B5563),
               fontWeight: FontWeight.w700,
@@ -223,7 +209,11 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               'Featured Artisans',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -254,7 +244,11 @@ class _HomePageState extends State<HomePage> {
                         artisan.$1,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ],
                   ),
@@ -280,6 +274,27 @@ class _HomePageState extends State<HomePage> {
       return const SizedBox(height: 260, child: Center(child: Text('Aucun produit disponible.')));
     }
 
+    final filteredProducts = _filteredProducts;
+
+    if (filteredProducts.isEmpty) {
+      return SizedBox(
+        height: 260,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
+              const SizedBox(height: 16),
+              Text(
+                'Aucun produit dans cette catégorie',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
       child: Column(
@@ -287,7 +302,14 @@ class _HomePageState extends State<HomePage> {
         children: [
           const Row(
             children: [
-              Text('Trending Products', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+              Text(
+                'Trending Products',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                ),
+              ),
               Spacer(),
               Icon(Icons.tune_rounded, color: Color(0xFF9CA3AF)),
             ],
@@ -296,7 +318,7 @@ class _HomePageState extends State<HomePage> {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: _products.length,
+            itemCount: filteredProducts.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -304,7 +326,7 @@ class _HomePageState extends State<HomePage> {
               childAspectRatio: 0.66,
             ),
             itemBuilder: (_, index) {
-              final product = _products[index];
+              final product = filteredProducts[index];
               return ProductCard(
                 product: product,
                 onAdd: () => widget.onAddToCart(product),
@@ -326,55 +348,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCheckoutBar() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFF1ECE7))),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                _cartQty == 0 ? 'Panier vide' : '$_cartQty article(s) - ${_cartTotal.toStringAsFixed(0)} CFA',
-                style: const TextStyle(fontWeight: FontWeight.w700),
-              ),
-            ),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 170,
-              child: AppButton(
-                label: 'Commander',
-                icon: Icons.shopping_bag_outlined,
-                loading: _checkoutLoading,
-                onPressed: widget.cart.isEmpty
-                    ? null
-                    : () async {
-                        setState(() => _checkoutLoading = true);
-                        try {
-                          final orderId = await widget.onCheckout();
-                          if (!mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Commande payee. ID: $orderId')),
-                          );
-                        } catch (e) {
-                          if (!mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-                          );
-                        } finally {
-                          if (mounted) setState(() => _checkoutLoading = false);
-                        }
-                      },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

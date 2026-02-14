@@ -18,10 +18,12 @@ class LoginFormContent extends StatefulWidget {
     this.showClose = false,
     this.onClose,
     this.rememberMeInitial = false,
+    this.onSkip,
   });
 
   final Future<void> Function(String email, String password, bool rememberMe) onSubmit;
   final VoidCallback onGoToRegister;
+  final VoidCallback? onSkip;
   final bool loading;
   final String? error;
   final String? apiBaseUrl;
@@ -276,6 +278,25 @@ class _LoginFormContentState extends State<LoginFormContent> {
               ),
             ),
           ),
+
+          // Guest mode button
+          if (widget.onSkip != null) ...[
+            const SizedBox(height: AuthStyles.spacing12),
+            TextButton(
+              onPressed: widget.loading ? null : widget.onSkip,
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: AuthStyles.spacing12),
+              ),
+              child: Text(
+                'Continuer sans compte',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: widget.loading ? Colors.grey : const Color(0xFF6B7280),
+                ),
+              ),
+            ),
+          ],
 
           // Debug info
           if (kDebugMode && widget.apiBaseUrl != null) ...[

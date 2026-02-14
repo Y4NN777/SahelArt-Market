@@ -9,7 +9,7 @@ import '../features/auth/presentation/pages/vendor_register_page.dart';
 import '../features/auth/presentation/splash_page.dart';
 import '../features/cart/domain/cart_item.dart';
 import '../features/products/domain/product.dart';
-import '../features/products/presentation/home_page.dart';
+import '../presentation/pages/main_navigation_page.dart';
 import '../data/services/storage_service.dart';
 
 enum AuthView { login, roleSelection, customerRegister, vendorRegister }
@@ -33,6 +33,7 @@ class _SahelArtAppState extends State<SahelArtApp> {
   bool _rememberMe = false;
   String? _authError;
   AuthView _authView = AuthView.login;
+  bool _showAuthScreen = false; // Guest mode by default
 
   @override
   void initState() {
@@ -60,7 +61,8 @@ class _SahelArtAppState extends State<SahelArtApp> {
       );
     }
 
-    if (_token == null) {
+    // Show auth screens only if explicitly requested or during registration flow
+    if (_showAuthScreen && _token == null) {
       // Role selection screen
       if (_authView == AuthView.roleSelection) {
         return RoleSelectionPage(
@@ -78,6 +80,12 @@ class _SahelArtAppState extends State<SahelArtApp> {
               _authError = null;
             });
           },
+          onSkip: () {
+            setState(() {
+              _showAuthScreen = false;
+              _authError = null;
+            });
+          },
         );
       }
 
@@ -92,13 +100,32 @@ class _SahelArtAppState extends State<SahelArtApp> {
             required String email,
             required String password,
           }) async {
-            // TODO: Implement customer registration
-            setState(() => _authLoading = true);
-            await Future.delayed(const Duration(seconds: 2));
             setState(() {
-              _authLoading = false;
-              _authError = 'Inscription customer pas encore implémentée';
+              _authLoading = true;
+              _authError = null;
             });
+
+            try {
+              // Mock registration - simulate success
+              await Future.delayed(const Duration(milliseconds: 1200));
+              final mockToken = 'mock_customer_token_${DateTime.now().millisecondsSinceEpoch}';
+
+              // Save token if needed
+              await _storageService.saveToken(mockToken);
+
+              if (!mounted) return;
+              setState(() {
+                _token = mockToken;
+                _authLoading = false;
+                _showAuthScreen = false; // Hide auth screen after successful registration
+              });
+            } catch (e) {
+              if (!mounted) return;
+              setState(() {
+                _authError = e.toString().replaceFirst('Exception: ', '');
+                _authLoading = false;
+              });
+            }
           },
           onBack: () {
             setState(() {
@@ -123,13 +150,32 @@ class _SahelArtAppState extends State<SahelArtApp> {
             required String businessDescription,
             required String phone,
           }) async {
-            // TODO: Implement vendor registration
-            setState(() => _authLoading = true);
-            await Future.delayed(const Duration(seconds: 2));
             setState(() {
-              _authLoading = false;
-              _authError = 'Inscription vendor pas encore implémentée';
+              _authLoading = true;
+              _authError = null;
             });
+
+            try {
+              // Mock registration - simulate success
+              await Future.delayed(const Duration(milliseconds: 1200));
+              final mockToken = 'mock_vendor_token_${DateTime.now().millisecondsSinceEpoch}';
+
+              // Save token if needed
+              await _storageService.saveToken(mockToken);
+
+              if (!mounted) return;
+              setState(() {
+                _token = mockToken;
+                _authLoading = false;
+                _showAuthScreen = false; // Hide auth screen after successful registration
+              });
+            } catch (e) {
+              if (!mounted) return;
+              setState(() {
+                _authError = e.toString().replaceFirst('Exception: ', '');
+                _authLoading = false;
+              });
+            }
           },
           onBack: () {
             setState(() {
@@ -153,12 +199,29 @@ class _SahelArtAppState extends State<SahelArtApp> {
           });
         },
         onLogin: _handleLogin,
+        onSkip: () {
+          setState(() {
+            _showAuthScreen = false;
+            _authError = null;
+          });
+        },
       );
     }
 
-    return HomePage(
-      apiClient: _apiClient.withToken(_token!),
+    // Main app - accessible for both guest and authenticated users
+    final apiClient = _token != null ? _apiClient.withToken(_token!) : _apiClient;
+
+    return MainNavigationPage(
+      apiClient: apiClient,
       cart: _cart,
+      isGuest: _token == null,
+      onLogin: () {
+        setState(() {
+          _showAuthScreen = true;
+          _authView = AuthView.login;
+          _authError = null;
+        });
+      },
       onLogout: _handleLogout,
       onAddToCart: _handleAddToCart,
       onUpdateQuantity: _handleUpdateQuantity,

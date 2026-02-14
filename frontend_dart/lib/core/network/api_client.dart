@@ -2,19 +2,21 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../../data/mock/products_mock.dart';
 import '../../features/cart/domain/cart_item.dart';
 import '../../features/orders/domain/order_summary.dart';
 import '../../features/products/domain/product.dart';
 import '../config/app_config.dart';
 
 class ApiClient {
-  ApiClient({this.token});
+  ApiClient({this.token, this.useMockData = true});
 
   final String? token;
+  final bool useMockData;
 
   String get baseUrl => AppConfig.apiBaseUrl;
 
-  ApiClient withToken(String value) => ApiClient(token: value);
+  ApiClient withToken(String value) => ApiClient(token: value, useMockData: useMockData);
 
   Map<String, String> _headers({bool auth = false}) {
     final headers = <String, String>{
@@ -28,6 +30,17 @@ class ApiClient {
   }
 
   Future<String> login({required String email, required String password}) async {
+    // Mock mode: simulate successful login
+    if (useMockData) {
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (email.isEmpty || password.isEmpty) {
+        throw Exception('Email et mot de passe requis.');
+      }
+      // Return mock token
+      return 'mock_token_${DateTime.now().millisecondsSinceEpoch}';
+    }
+
+    // Real backend call
     final res = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: _headers(),
@@ -41,6 +54,13 @@ class ApiClient {
   }
 
   Future<List<Product>> fetchProducts() async {
+    // Mock mode: return mock products
+    if (useMockData) {
+      await Future.delayed(const Duration(milliseconds: 600));
+      return ProductsMock.products;
+    }
+
+    // Real backend call
     final res = await http.get(
       Uri.parse('$baseUrl/products'),
       headers: _headers(auth: token != null),
@@ -54,6 +74,20 @@ class ApiClient {
   }
 
   Future<OrderSummary> createOrder(List<CartItem> cart) async {
+    // Mock mode: simulate order creation
+    if (useMockData) {
+      await Future.delayed(const Duration(milliseconds: 1000));
+      final total = cart.fold<double>(
+        0,
+        (sum, item) => sum + (item.product.price * item.quantity),
+      );
+      return OrderSummary(
+        id: 'order_${DateTime.now().millisecondsSinceEpoch}',
+        total: total,
+      );
+    }
+
+    // Real backend call
     final body = {
       'items': cart
           .map((item) => {'productId': item.product.id, 'quantity': item.quantity})
@@ -84,6 +118,13 @@ class ApiClient {
     required double amount,
     required String method,
   }) async {
+    // Mock mode: simulate payment
+    if (useMockData) {
+      await Future.delayed(const Duration(milliseconds: 1200));
+      return;
+    }
+
+    // Real backend call
     final res = await http.post(
       Uri.parse('$baseUrl/payments'),
       headers: _headers(auth: true),

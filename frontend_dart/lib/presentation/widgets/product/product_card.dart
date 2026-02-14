@@ -15,6 +15,51 @@ class ProductCard extends StatelessWidget {
   final VoidCallback onAdd;
   final VoidCallback? onTap;
 
+  Widget _buildProductImage(String imageUrl) {
+    // Check if it's a local asset or network URL
+    final isAsset = imageUrl.startsWith('assets/');
+
+    if (isAsset) {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color(0xFFF2F2F2),
+            child: const Icon(Icons.broken_image, size: 36, color: Color(0xFFBDBDBD)),
+          );
+        },
+      );
+    }
+
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.cover,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          color: const Color(0xFFF2F2F2),
+          child: Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+            ),
+          ),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: const Color(0xFFF2F2F2),
+          child: const Icon(Icons.broken_image, size: 36, color: Color(0xFFBDBDBD)),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -38,10 +83,12 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: Container(
-                  color: const Color(0xFFF2F2F2),
-                  child: const Icon(Icons.image_outlined, size: 36, color: Color(0xFFBDBDBD)),
-                ),
+                child: product.imageUrl != null
+                    ? _buildProductImage(product.imageUrl!)
+                    : Container(
+                        color: const Color(0xFFF2F2F2),
+                        child: const Icon(Icons.image_outlined, size: 36, color: Color(0xFFBDBDBD)),
+                      ),
               ),
             ),
             Padding(
@@ -53,7 +100,11 @@ class ProductCard extends StatelessWidget {
                     product.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Row(
