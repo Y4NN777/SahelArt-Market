@@ -11,6 +11,7 @@ import '../features/cart/domain/cart_item.dart';
 import '../features/products/domain/product.dart';
 import '../presentation/pages/main_navigation_page.dart';
 import '../data/services/storage_service.dart';
+import '../data/services/favorites_service.dart';
 
 enum AuthView { login, roleSelection, customerRegister, vendorRegister }
 
@@ -24,6 +25,7 @@ class SahelArtApp extends StatefulWidget {
 class _SahelArtAppState extends State<SahelArtApp> {
   final ApiClient _apiClient = ApiClient();
   final StorageService _storageService = StorageService();
+  final FavoritesService _favoritesService = FavoritesService();
   final List<CartItem> _cart = [];
 
   String? _token;
@@ -215,6 +217,7 @@ class _SahelArtAppState extends State<SahelArtApp> {
       apiClient: apiClient,
       cart: _cart,
       isGuest: _token == null,
+      favoritesService: _favoritesService,
       onLogin: () {
         setState(() {
           _showAuthScreen = true;
@@ -226,6 +229,7 @@ class _SahelArtAppState extends State<SahelArtApp> {
       onAddToCart: _handleAddToCart,
       onUpdateQuantity: _handleUpdateQuantity,
       onCheckout: _handleCheckout,
+      onFavoritesChanged: _handleFavoritesChanged,
     );
   }
 
@@ -240,6 +244,9 @@ class _SahelArtAppState extends State<SahelArtApp> {
   Future<void> _bootstrapAuth() async {
     final remember = await _storageService.getRememberMe();
     final token = await _storageService.getToken();
+
+    // Initialize favorites service
+    await _favoritesService.init();
 
     if (!mounted) return;
 
@@ -310,6 +317,10 @@ class _SahelArtAppState extends State<SahelArtApp> {
       _authError = null;
       _authView = AuthView.login;
     });
+  }
+
+  void _handleFavoritesChanged() {
+    setState(() {});
   }
 
   void _handleAddToCart(Product product) {

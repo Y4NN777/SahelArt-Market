@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/colors.dart';
+import '../../../data/services/favorites_service.dart';
+import '../../../presentation/widgets/common/confirmation_modal.dart';
 import '../../products/domain/product.dart';
 
-class ProductDetailsPage extends StatelessWidget {
+class ProductDetailsPage extends StatefulWidget {
   const ProductDetailsPage({
     super.key,
     required this.product,
     required this.onAddToCart,
+    this.favoritesService,
+    this.onFavoritesChanged,
   });
 
   final Product product;
   final VoidCallback onAddToCart;
+  final FavoritesService? favoritesService;
+  final VoidCallback? onFavoritesChanged;
+
+  @override
+  State<ProductDetailsPage> createState() => _ProductDetailsPageState();
+}
+
+class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  int _quantity = 1;
 
   Widget _buildProductImage(String imageUrl) {
     final isAsset = imageUrl.startsWith('assets/');
@@ -56,18 +69,36 @@ class ProductDetailsPage extends StatelessWidget {
                     child: Icon(Icons.arrow_back, color: Colors.white),
                   ),
                 ),
-                actions: const [
+                actions: [
                   Padding(
-                    padding: EdgeInsets.only(right: 12),
-                    child: CircleAvatar(
-                      backgroundColor: Color(0x55FFFFFF),
-                      child: Icon(Icons.favorite_border, color: Colors.white),
+                    padding: const EdgeInsets.only(right: 12),
+                    child: GestureDetector(
+                      onTap: widget.favoritesService != null
+                          ? () async {
+                              await widget.favoritesService!.toggleFavorite(widget.product.id);
+                              setState(() {});
+                              widget.onFavoritesChanged?.call();
+                            }
+                          : null,
+                      child: CircleAvatar(
+                        backgroundColor: widget.favoritesService?.isFavorite(widget.product.id) ?? false
+                            ? Colors.white
+                            : const Color(0x55FFFFFF),
+                        child: Icon(
+                          widget.favoritesService?.isFavorite(widget.product.id) ?? false
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: widget.favoritesService?.isFavorite(widget.product.id) ?? false
+                              ? AppColors.primary
+                              : Colors.white,
+                        ),
+                      ),
                     ),
                   )
                 ],
                 flexibleSpace: FlexibleSpaceBar(
-                  background: product.imageUrl != null
-                      ? _buildProductImage(product.imageUrl!)
+                  background: widget.product.imageUrl != null
+                      ? _buildProductImage(widget.product.imageUrl!)
                       : Container(
                           color: const Color(0xFFF2F2F2),
                           child: const Icon(Icons.image_outlined, size: 80, color: Color(0xFFBDBDBD)),
@@ -83,13 +114,13 @@ class ProductDetailsPage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _Badge(text: 'Only ${product.stock} left'),
+                          _Badge(text: 'Only ${widget.product.stock} left'),
                           Row(
                             children: [
                               const Icon(Icons.star, size: 18, color: Color(0xFFF59E0B)),
                               const SizedBox(width: 4),
                               Text(
-                                '${product.rating} (${product.reviewsCount})',
+                                '${widget.product.rating} (${widget.product.reviewsCount})',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.textPrimary,
@@ -101,7 +132,7 @@ class ProductDetailsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        product.name,
+                        widget.product.name,
                         style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w800,
@@ -110,7 +141,7 @@ class ProductDetailsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'CFA ${product.price.toStringAsFixed(0)}',
+                        'CFA ${widget.product.price.toStringAsFixed(0)}',
                         style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 30,
@@ -142,14 +173,14 @@ class ProductDetailsPage extends StatelessWidget {
                                     style: TextStyle(fontSize: 12, color: AppColors.primary),
                                   ),
                                   Text(
-                                    product.artisan?.name ?? 'Fatoumata Diallo',
+                                    widget.product.artisan?.name ?? 'Fatoumata Diallo',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w800,
                                       color: AppColors.textPrimary,
                                     ),
                                   ),
                                   Text(
-                                    product.artisan?.location ?? 'Segou, Mali',
+                                    widget.product.artisan?.location ?? 'Segou, Mali',
                                     style: const TextStyle(
                                       color: Color(0xFF6B7280),
                                       fontSize: 12,
@@ -173,7 +204,7 @@ class ProductDetailsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        product.description ?? 'This authentic Bogolanfini is hand-dyed using fermented mud and plant leaves, a tradition passed down through generations.',
+                        widget.product.description ?? 'This authentic Bogolanfini is hand-dyed using fermented mud and plant leaves, a tradition passed down through generations.',
                         style: const TextStyle(
                           color: Color(0xFF4B5563),
                           height: 1.4,
@@ -218,46 +249,130 @@ class ProductDetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 child: Row(
                   children: [
+                    // Quantity Selector - Plus compact
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xFFE5E7EB)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          InkWell(
+                            onTap: _quantity > 1
+                                ? () => setState(() => _quantity--)
+                                : null,
+                            borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
+                            child: Container(
+                              width: 32,
+                              height: 44,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.remove,
+                                size: 18,
+                                color: _quantity > 1
+                                    ? AppColors.textPrimary
+                                    : const Color(0xFFD1D5DB),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 36,
+                            height: 44,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              border: Border.symmetric(
+                                vertical: BorderSide(color: Color(0xFFE5E7EB)),
+                              ),
+                            ),
+                            child: Text(
+                              '$_quantity',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: _quantity < widget.product.stock
+                                ? () => setState(() => _quantity++)
+                                : null,
+                            borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+                            child: Container(
+                              width: 32,
+                              height: 44,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                                color: _quantity < widget.product.stock
+                                    ? AppColors.textPrimary
+                                    : const Color(0xFFD1D5DB),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    // Total Price - Plus compact
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Text(
-                            'Total Price',
-                            style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                            'Total',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFF6B7280),
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
+                          const SizedBox(height: 2),
                           Text(
-                            'CFA ${(product.price / 1000).toStringAsFixed(0)}k',
+                            '${((widget.product.price * _quantity) / 1000).toStringAsFixed(0)}k CFA',
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
-                              fontSize: 22,
-                              color: AppColors.textPrimary,
+                              fontSize: 18,
+                              color: AppColors.primary,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    FilledButton.icon(
+                    const SizedBox(width: 8),
+                    // Bouton Ajouter - Plus compact
+                    FilledButton(
                       onPressed: () {
-                        onAddToCart();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${product.name} ajouté au panier'),
-                            backgroundColor: AppColors.primary,
-                            duration: const Duration(seconds: 2),
-                            behavior: SnackBarBehavior.floating,
-                          ),
+                        for (int i = 0; i < _quantity; i++) {
+                          widget.onAddToCart();
+                        }
+
+                        // Afficher modal de confirmation stylé
+                        ConfirmationModalHelper.showAddedToCart(
+                          context,
+                          productName: widget.product.name,
+                          quantity: _quantity,
                         );
                       },
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
-                        minimumSize: const Size(180, 52),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        minimumSize: const Size(90, 44),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      icon: const Icon(Icons.shopping_bag_outlined),
-                      label: const Text('Add to Cart', style: TextStyle(fontWeight: FontWeight.w700)),
+                      child: const Text(
+                        'Ajouter',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ],
                 ),

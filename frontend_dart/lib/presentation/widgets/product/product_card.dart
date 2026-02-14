@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/colors.dart';
+import '../../../data/services/favorites_service.dart';
 import '../../../features/products/domain/product.dart';
 
 class ProductCard extends StatelessWidget {
@@ -9,11 +10,15 @@ class ProductCard extends StatelessWidget {
     required this.product,
     required this.onAdd,
     this.onTap,
+    this.favoritesService,
+    this.onFavoritesChanged,
   });
 
   final Product product;
   final VoidCallback onAdd;
   final VoidCallback? onTap;
+  final FavoritesService? favoritesService;
+  final VoidCallback? onFavoritesChanged;
 
   Widget _buildProductImage(String imageUrl) {
     // Check if it's a local asset or network URL
@@ -81,14 +86,54 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: product.imageUrl != null
-                    ? _buildProductImage(product.imageUrl!)
-                    : Container(
-                        color: const Color(0xFFF2F2F2),
-                        child: const Icon(Icons.image_outlined, size: 36, color: Color(0xFFBDBDBD)),
+              child: Stack(
+                children: [
+                  SizedBox.expand(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                      child: product.imageUrl != null
+                          ? _buildProductImage(product.imageUrl!)
+                          : Container(
+                              color: const Color(0xFFF2F2F2),
+                              child: const Icon(Icons.image_outlined, size: 36, color: Color(0xFFBDBDBD)),
+                            ),
+                    ),
+                  ),
+                  if (favoritesService != null)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await favoritesService!.toggleFavorite(product.id);
+                          onFavoritesChanged?.call();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x20000000),
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              )
+                            ],
+                          ),
+                          child: Icon(
+                            favoritesService!.isFavorite(product.id)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            size: 18,
+                            color: favoritesService!.isFavorite(product.id)
+                                ? AppColors.primary
+                                : const Color(0xFF6B7280),
+                          ),
+                        ),
                       ),
+                    ),
+                ],
               ),
             ),
             Padding(
