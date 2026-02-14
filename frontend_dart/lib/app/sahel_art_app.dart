@@ -167,7 +167,7 @@ class _SahelArtAppState extends State<SahelArtApp> {
   }
 
   Future<void> _startIntro() async {
-    await Future<void>.delayed(const Duration(milliseconds: 2100));
+    await Future<void>.delayed(const Duration(milliseconds: 3500));
     if (!mounted) return;
     setState(() {
       _introDone = true;
